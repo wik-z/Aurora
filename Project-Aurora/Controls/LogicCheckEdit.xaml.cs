@@ -23,7 +23,7 @@ namespace Aurora.Controls
     public partial class LogicCheckEdit : UserControl
     {
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public static readonly DependencyProperty LayerProperty = DependencyProperty.Register("Layer", typeof(Layer), typeof(LogicCheckEdit));
+        public static readonly DependencyProperty LayerProperty = DependencyProperty.Register("Layer", typeof(Layer), typeof(LogicCheckEdit), new PropertyMetadata(LayerPropertyChanged));
 
         public Layer Layer
         {
@@ -34,14 +34,20 @@ namespace Aurora.Controls
             set
             {
                 SetValue(LayerProperty, value);
-                this.cmbParameter.ItemsSource = value.AssociatedProfile.ParameterLookup
-                    .Where(s => (s.Value.Item1.IsPrimitive || s.Value.Item1 == typeof(string)) && s.Value.Item2 == null).ToDictionary(s => s) //Remove methods and non-primitives for right now
-                    .Keys;
             }
         }
 
+        private static void LayerPropertyChanged(DependencyObject source, DependencyPropertyChangedEventArgs e)
+        {
+            LogicCheckEdit instance = source as LogicCheckEdit;
+
+            instance.cmbParameter.ItemsSource = (e.NewValue as Layer).AssociatedProfile.ParameterLookup
+                    .Where(s => (s.Value.Item1.IsPrimitive || s.Value.Item1 == typeof(string)) && s.Value.Item2 == null).ToDictionary(s => s) //Remove methods and non-primitives for right now
+                    .Keys;
+        }
+
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public static readonly DependencyProperty LogicProperty = DependencyProperty.Register("Check", typeof(KeyValuePair<string, Tuple<LogicOperator, object>>), typeof(LogicCheckEdit));
+        public static readonly DependencyProperty LogicProperty = DependencyProperty.Register("Check", typeof(KeyValuePair<string, Tuple<LogicOperator, object>>), typeof(LogicCheckEdit), new PropertyMetadata(LogicPropertyChanged));
 
         public KeyValuePair<string, Tuple<LogicOperator, object>> Check
         {
@@ -52,9 +58,15 @@ namespace Aurora.Controls
             set
             {
                 SetValue(LogicProperty, value);
-                this.cmbParameter.SelectedItem = value.Key;
-                this.cmbCheck.SelectedItem = Check.Value.Item1;
             }
+        }
+
+        private static void LogicPropertyChanged(DependencyObject source, DependencyPropertyChangedEventArgs e)
+        {
+            LogicCheckEdit instance = source as LogicCheckEdit;
+
+            instance.cmbParameter.SelectedItem = ((KeyValuePair<string, Tuple<LogicOperator, object>>)e.NewValue).Key;
+            instance.cmbCheck.SelectedItem = instance.Check.Value.Item1;
         }
 
         public LogicCheckEdit()
@@ -64,9 +76,9 @@ namespace Aurora.Controls
 
         private void cmbParameter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            
-            string str = e.AddedItems[0] as string;
-            string old_str = e.RemovedItems[0] as string;
+
+            string str = (e.AddedItems.Count > 0 ? ((KeyValuePair<string, Tuple<Type, Type>>)e.AddedItems[0]).Key as string : null);
+            string old_str = (e.RemovedItems.Count > 0 ? ((KeyValuePair<string, Tuple<Type, Type>>)e.RemovedItems[0]).Key as string : null);
             Tuple<Type, Type> typ = Layer.AssociatedProfile.ParameterLookup[str];
             Tuple<Type, Type> old_typ = old_str != null ? Layer.AssociatedProfile.ParameterLookup[str] : null;
             if (old_typ == null || old_typ.Item1 != typ.Item1)

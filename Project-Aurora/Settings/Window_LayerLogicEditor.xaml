@@ -58,7 +58,7 @@
             <ListBox x:Name="lstChecks" Margin="10,31,10,58" ItemsSource="{Binding ReferenceComparisons, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Controls:LogicCheckEdit Layer="{Binding ElementName=windowMain, Path=DataContext}" Check="{Binding .}"/>
+                        <Controls:LogicCheckEdit DataContext="{Binding}" Layer="{Binding DataContext, ElementName=windowMain, Mode=TwoWay}"/>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>

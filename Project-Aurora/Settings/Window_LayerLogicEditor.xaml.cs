@@ -41,7 +41,7 @@ namespace Aurora.Settings
 
         private void btnAddCheck_Click(object sender, RoutedEventArgs e)
         {
-            //((LogicItem)this.grdLogicEdit.DataContext).ReferenceComparisons.Add(new Tuple<string, Tuple<LogicOperator, object>>(null, new Tuple<LogicOperator, object>(null, null)));
+            ((LogicItem)this.grdLogicEdit.DataContext).ReferenceComparisons.Add(new Tuple<string, Tuple<LogicOperator, object>>(null, new Tuple<LogicOperator, object>(LogicOperator.Equal, null)));
         }
     }
 }
