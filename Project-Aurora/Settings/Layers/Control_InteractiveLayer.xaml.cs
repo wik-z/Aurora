@@ -51,8 +51,8 @@ namespace Aurora.Settings.Layers
                 this.interactive_effects_speed_slider.Value = (float)(this.DataContext as InteractiveLayerHandler).Properties._EffectSpeed;
                 this.interactive_effects_width_label.Text = (this.DataContext as InteractiveLayerHandler).Properties._EffectWidth + " px";
                 this.interactive_effects_width_slider.Value = (float)(this.DataContext as InteractiveLayerHandler).Properties._EffectWidth;
-
-                this.interactive_effects_mouse_interaction_enable.IsChecked = (this.DataContext as InteractiveLayerHandler).Properties._TriggerOnMouseClick;
+                this.KeySequence_keys.Sequence = (this.DataContext as InteractiveLayerHandler).Properties._Sequence;
+                this.KeySequence_keys.FreestyleEnabled = false;
 
                 settingsset = true;
             }
@@ -141,14 +141,6 @@ namespace Aurora.Settings.Layers
 
                 if (this.interactive_effects_width_label is TextBlock)
                     this.interactive_effects_width_label.Text = this.interactive_effects_width_slider.Value + " px";
-            }
-        }
-
-        private void interactive_effects_mouse_interaction_enable_Checked(object sender, RoutedEventArgs e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is InteractiveLayerHandler && sender is CheckBox && (sender as CheckBox).IsChecked.HasValue)
-            {
-                (this.DataContext as InteractiveLayerHandler).Properties._TriggerOnMouseClick = (sender as CheckBox).IsChecked.Value;
             }
         }
     }

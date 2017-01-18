@@ -9,13 +9,7 @@ namespace Aurora.Profiles.Aurora_Wrapper
     public class GameEvent_Aurora_Wrapper : LightEvent
     {
         internal int[] bitmap = new int[126];
-        internal Color logo = Color.Empty;
-        internal Color peripheral = Color.Empty;
-        internal Color g1 = Color.Empty;
-        internal Color g2 = Color.Empty;
-        internal Color g3 = Color.Empty;
-        internal Color g4 = Color.Empty;
-        internal Color g5 = Color.Empty;
+        internal Dictionary<Devices.DeviceKeys, Color> extra_keys = new Dictionary<Devices.DeviceKeys, Color>();
         internal Color last_fill_color = Color.Black;
         internal Dictionary<Devices.DeviceKeys, KeyEffect> key_effects = new Dictionary<Devices.DeviceKeys, KeyEffect>();
         internal EntireEffect current_effect = null;
@@ -23,8 +17,10 @@ namespace Aurora.Profiles.Aurora_Wrapper
         internal Dictionary<Devices.DeviceKeys, Color> colors = new Dictionary<Devices.DeviceKeys, Color>();
 
         internal bool colorEnhance_Enabled = false;
-        internal float colorEnhance_initial_factor = 3.0f;
+        internal int colorEnhance_Mode = 0;
         internal int colorEnhance_color_factor = 90;
+        internal float colorEnhance_color_hsv_sine = 0.1f;
+        internal float colorEnhance_color_hsv_gamma = 2.5f;
 
         protected virtual void UpdateExtraLights(Queue<EffectLayer> layers)
         {
@@ -68,28 +64,14 @@ namespace Aurora.Profiles.Aurora_Wrapper
             Devices.DeviceKeys[] allkeys = Enum.GetValues(typeof(Devices.DeviceKeys)).Cast<Devices.DeviceKeys>().ToArray();
             foreach (var key in allkeys)
             {
-                if (key == Devices.DeviceKeys.LOGO)
-                    bitmap_layer.Set(key, GetBoostedColor(logo));
-                else if (key == Devices.DeviceKeys.Peripheral)
-                    bitmap_layer.Set(key, GetBoostedColor(peripheral));
-                else if (key == Devices.DeviceKeys.G1)
-                    bitmap_layer.Set(key, GetBoostedColor(g1));
-                else if (key == Devices.DeviceKeys.G2)
-                    bitmap_layer.Set(key, GetBoostedColor(g2));
-                else if (key == Devices.DeviceKeys.G3)
-                    bitmap_layer.Set(key, GetBoostedColor(g3));
-                else if (key == Devices.DeviceKeys.G4)
-                    bitmap_layer.Set(key, GetBoostedColor(g4));
-                else if (key == Devices.DeviceKeys.G5)
-                    bitmap_layer.Set(key, GetBoostedColor(g5));
+                if(extra_keys.ContainsKey(key))
+                    bitmap_layer.Set(key, GetBoostedColor(extra_keys[key]));
                 else
                 {
                     Devices.Logitech.Logitech_keyboardBitmapKeys logi_key = Devices.Logitech.LogitechDevice.ToLogitechBitmap(key);
 
                     if (logi_key != Devices.Logitech.Logitech_keyboardBitmapKeys.UNKNOWN && bitmap.Length > 0)
-                    {
                         bitmap_layer.Set(key, GetBoostedColor(Utils.ColorUtils.GetColorFromInt(bitmap[(int)logi_key / 4])));
-                    }
                 }
             }
 
@@ -151,14 +133,32 @@ namespace Aurora.Profiles.Aurora_Wrapper
 
                 GameState_Wrapper ngw_state = (new_game_state as GameState_Wrapper);
 
+                if(ngw_state.Sent_Bitmap.Length != 0)
                     bitmap = ngw_state.Sent_Bitmap;
-                    logo = ngw_state.Extra_Keys.logo;
-                    g1 = ngw_state.Extra_Keys.G1;
-                    g2 = ngw_state.Extra_Keys.G2;
-                    g3 = ngw_state.Extra_Keys.G3;
-                    g4 = ngw_state.Extra_Keys.G4;
-                    g5 = ngw_state.Extra_Keys.G5;
-                    peripheral = ngw_state.Extra_Keys.peripheral;
+
+                SetExtraKey(Devices.DeviceKeys.LOGO, ngw_state.Extra_Keys.logo);
+                SetExtraKey(Devices.DeviceKeys.LOGO2, ngw_state.Extra_Keys.badge);
+                SetExtraKey(Devices.DeviceKeys.Peripheral, ngw_state.Extra_Keys.peripheral);
+                SetExtraKey(Devices.DeviceKeys.G1, ngw_state.Extra_Keys.G1);
+                SetExtraKey(Devices.DeviceKeys.G2, ngw_state.Extra_Keys.G2);
+                SetExtraKey(Devices.DeviceKeys.G3, ngw_state.Extra_Keys.G3);
+                SetExtraKey(Devices.DeviceKeys.G4, ngw_state.Extra_Keys.G4);
+                SetExtraKey(Devices.DeviceKeys.G5, ngw_state.Extra_Keys.G5);
+                SetExtraKey(Devices.DeviceKeys.G6, ngw_state.Extra_Keys.G6);
+                SetExtraKey(Devices.DeviceKeys.G7, ngw_state.Extra_Keys.G7);
+                SetExtraKey(Devices.DeviceKeys.G8, ngw_state.Extra_Keys.G8);
+                SetExtraKey(Devices.DeviceKeys.G9, ngw_state.Extra_Keys.G9);
+                SetExtraKey(Devices.DeviceKeys.G10, ngw_state.Extra_Keys.G10);
+                SetExtraKey(Devices.DeviceKeys.G11, ngw_state.Extra_Keys.G11);
+                SetExtraKey(Devices.DeviceKeys.G12, ngw_state.Extra_Keys.G12);
+                SetExtraKey(Devices.DeviceKeys.G13, ngw_state.Extra_Keys.G13);
+                SetExtraKey(Devices.DeviceKeys.G14, ngw_state.Extra_Keys.G14);
+                SetExtraKey(Devices.DeviceKeys.G15, ngw_state.Extra_Keys.G15);
+                SetExtraKey(Devices.DeviceKeys.G16, ngw_state.Extra_Keys.G16);
+                SetExtraKey(Devices.DeviceKeys.G17, ngw_state.Extra_Keys.G17);
+                SetExtraKey(Devices.DeviceKeys.G18, ngw_state.Extra_Keys.G18);
+                SetExtraKey(Devices.DeviceKeys.G19, ngw_state.Extra_Keys.G19);
+                SetExtraKey(Devices.DeviceKeys.G20, ngw_state.Extra_Keys.G20);
 
                 if (ngw_state.Command.Equals("SetLighting"))
                 {
@@ -168,12 +168,9 @@ namespace Aurora.Profiles.Aurora_Wrapper
                     {
                         last_fill_color = newfill;
 
-                        for (int i = 0; i < bitmap.Length; i += 4)
+                        for (int i = 0; i < bitmap.Length; i++)
                         {
-                            bitmap[i] = (byte)ngw_state.Command_Data.blue_start;
-                            bitmap[i + 1] = (byte)ngw_state.Command_Data.green_start;
-                            bitmap[i + 2] = (byte)ngw_state.Command_Data.red_start;
-                            bitmap[i + 3] = (byte)255;
+                            bitmap[i] = (int)(((int)ngw_state.Command_Data.red_start << 16) | ((int)ngw_state.Command_Data.green_start << 8) | ((int)ngw_state.Command_Data.blue_start));
                         }
                     }
                 }
@@ -183,10 +180,7 @@ namespace Aurora.Profiles.Aurora_Wrapper
 
                     if (bitmap_key != Devices.Logitech.Logitech_keyboardBitmapKeys.UNKNOWN)
                     {
-                        bitmap[(int)bitmap_key] = (byte)ngw_state.Command_Data.blue_start;
-                        bitmap[(int)bitmap_key + 1] = (byte)ngw_state.Command_Data.green_start;
-                        bitmap[(int)bitmap_key + 2] = (byte)ngw_state.Command_Data.red_start;
-                        bitmap[(int)bitmap_key + 3] = (byte)255;
+                        bitmap[(int)bitmap_key / 4] = (int)(((int)ngw_state.Command_Data.red_start << 16) | ((int)ngw_state.Command_Data.green_start << 8) | ((int)ngw_state.Command_Data.blue_start));
                     }
                 }
                 else if (ngw_state.Command.Equals("FlashSingleKey"))
@@ -246,15 +240,36 @@ namespace Aurora.Profiles.Aurora_Wrapper
                 //LightFX
                 else if (ngw_state.Command.Equals("LFX_GetNumDevices"))
                 {
+                    //Retain previous lighting
+                    int fill_color_int = Utils.ColorUtils.GetIntFromColor(last_fill_color);
 
+                    for (int i = 0; i < bitmap.Length; i++)
+                        bitmap[i] = fill_color_int;
+
+                    foreach (var extra_key in extra_keys.Keys.ToArray())
+                        extra_keys[extra_key] = last_fill_color;
                 }
                 else if (ngw_state.Command.Equals("LFX_Light"))
                 {
+                    //Retain previous lighting
+                    int fill_color_int = Utils.ColorUtils.GetIntFromColor(last_fill_color);
 
+                    for (int i = 0; i < bitmap.Length; i++)
+                        bitmap[i] = fill_color_int;
+
+                    foreach (var extra_key in extra_keys.Keys.ToArray())
+                        extra_keys[extra_key] = last_fill_color;
                 }
                 else if (ngw_state.Command.Equals("LFX_SetLightColor"))
                 {
+                    //Retain previous lighting
+                    int fill_color_int = Utils.ColorUtils.GetIntFromColor(last_fill_color);
 
+                    for (int i = 0; i < bitmap.Length; i++)
+                        bitmap[i] = fill_color_int;
+
+                    foreach (var extra_key in extra_keys.Keys.ToArray())
+                        extra_keys[extra_key] = last_fill_color;
                 }
                 else if (ngw_state.Command.Equals("LFX_Update"))
                 {
@@ -268,10 +283,10 @@ namespace Aurora.Profiles.Aurora_Wrapper
                         {
                             bitmap[i] = (int)(((int)ngw_state.Command_Data.red_start << 16) | ((int)ngw_state.Command_Data.green_start << 8) | ((int)ngw_state.Command_Data.blue_start));
                         }
-
-                        logo = Color.FromArgb(ngw_state.Command_Data.red_start, ngw_state.Command_Data.green_start, ngw_state.Command_Data.blue_start);
-                        peripheral = Color.FromArgb(ngw_state.Command_Data.red_start, ngw_state.Command_Data.green_start, ngw_state.Command_Data.blue_start);
                     }
+
+                    foreach (var extra_key in extra_keys.Keys.ToArray())
+                        extra_keys[extra_key] = newfill;
                 }
                 else if (ngw_state.Command.Equals("LFX_SetLightActionColor") || ngw_state.Command.Equals("LFX_ActionColor"))
                 {
@@ -366,22 +381,120 @@ namespace Aurora.Profiles.Aurora_Wrapper
             return Global.Configuration.allow_all_logitech_bitmaps;
         }
 
+        public float[] RgbToHsv(Color colorRgb)
+        {
+            float R = colorRgb.R / 255.0f;
+            float G = colorRgb.G / 255.0f;
+            float B = colorRgb.B / 255.0f;
+
+            float M = Math.Max(Math.Max(R, G), B);
+            float m = Math.Min(Math.Min(R, G), B);
+            float C = M - m;
+
+            float H = 0.0f;
+            if (M == R)
+                H = (G - B) / C % 6;
+            else if (M == G)
+                H = (B - R) / C + 2;
+            else if (M == B)
+                H = (R - G) / C + 4;
+            H *= 60.0f;
+
+            float V = M;
+            float S = 0;
+            if (V != 0)
+                S = C / V;
+
+            return new float[] { H, S, V };
+        }
+
+        public Color HsvToRgb(float[] colorHsv)
+        {
+            double H = colorHsv[0] / 60.0;
+            float S = colorHsv[1];
+            float V = colorHsv[2];
+
+            float C = V * S;
+
+            float[] rgb = new float[] { 0, 0, 0 };
+
+            float X = (float)(C * (1 - Math.Abs(H % 2 - 1)));
+            Console.WriteLine("C> " + C);
+            Console.WriteLine("X> " + X);
+
+            int i = (int)Math.Floor(H);
+            switch (i)
+            {
+                case 0:
+                case 6:
+                    rgb = new float[] { C, X, 0 };
+                    break;
+                case 1:
+                    rgb = new float[] { X, C, 0 };
+                    break;
+                case 2:
+                    rgb = new float[] { 0, C, X };
+                    break;
+                case 3:
+                    rgb = new float[] { 0, X, C };
+                    break;
+                case 4:
+                    rgb = new float[] { X, 0, C };
+                    break;
+                case 5:
+                case -1:
+                    rgb = new float[] { C, 0, X };
+                    break;
+            }
+            float m = V - C;
+
+            return Color.FromArgb(Clamp((int)((rgb[0] + m) * 255 + 0.5f)), Clamp((int)((rgb[1] + m) * 255 + 0.5f)), Clamp((int)((rgb[2] + m) * 255 + 0.5f)));
+        }
+
+        private int Clamp(int n)
+        {
+            if (n <= 0)
+                return 0;
+            if (n >= 255)
+                return 255;
+            return n;
+        }
+
         private Color GetBoostedColor(Color color)
         {
             if (!colorEnhance_Enabled)
                 return color;
 
-            // initial_factor * (1 - (x / color_factor))
+            switch (colorEnhance_Mode)
+            {
+                case 0:
+                    float boost_amount = 0.0f;
+                    boost_amount += (1.0f - (color.R / colorEnhance_color_factor));
+                    boost_amount += (1.0f - (color.G / colorEnhance_color_factor));
+                    boost_amount += (1.0f - (color.B / colorEnhance_color_factor));
 
-            float boost_amount = 0.0f;
-            boost_amount += colorEnhance_initial_factor * (1.0f - (color.R / colorEnhance_color_factor));
-            boost_amount += colorEnhance_initial_factor * (1.0f - (color.G / colorEnhance_color_factor));
-            boost_amount += colorEnhance_initial_factor * (1.0f - (color.B / colorEnhance_color_factor));
-            boost_amount /= colorEnhance_initial_factor;
+                    boost_amount = boost_amount <= 1.0f ? 1.0f : boost_amount;
 
-            boost_amount = boost_amount <= 1.0f ? 1.0f : boost_amount;
+                    return Utils.ColorUtils.MultiplyColorByScalar(color, boost_amount);
 
-            return Utils.ColorUtils.MultiplyColorByScalar(color, boost_amount);
+                case 1:
+                    float[] colorHsv = RgbToHsv(color);
+                    float X = colorEnhance_color_hsv_sine;
+                    float Y = 1.0f / colorEnhance_color_hsv_gamma;
+                    colorHsv[2] = (float)Math.Min(1, (double)(Math.Pow(X * Math.Sin(2 * Math.PI * colorHsv[2]) + colorHsv[2], Y)));
+                    return HsvToRgb(colorHsv);
+
+                default:
+                    return color;
+            }
+        }
+
+        private void SetExtraKey(Devices.DeviceKeys key, Color color)
+        {
+            if (!extra_keys.ContainsKey(key))
+                extra_keys.Add(key, color);
+            else
+                extra_keys[key] = color;
         }
     }
 

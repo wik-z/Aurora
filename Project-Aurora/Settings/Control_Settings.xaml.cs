@@ -10,6 +10,7 @@ using Xceed.Wpf.Toolkit;
 using Aurora.Profiles.Desktop;
 using Microsoft.Win32;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace Aurora.Settings
 {
@@ -19,6 +20,10 @@ namespace Aurora.Settings
     public partial class Control_Settings : UserControl
     {
         private RegistryKey runRegistryPath = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+
+        private Window winBitmapView = null;
+        private Image imgBitmap = new Image();
+        private static bool bitmapViewOpen;
 
         public Control_Settings()
         {
@@ -30,6 +35,8 @@ namespace Aurora.Settings
 
             this.app_exit_mode.SelectedIndex = (int)Global.Configuration.close_mode;
             this.app_detection_mode.SelectedIndex = (int)Global.Configuration.detection_mode;
+
+            load_excluded_listbox();
 
             this.volume_as_brightness_enabled.IsChecked = Global.Configuration.use_volume_as_brightness;
 
@@ -92,32 +99,6 @@ namespace Aurora.Settings
 
             this.updates_autocheck_on_start.IsChecked = Global.Configuration.updates_check_on_start_up;
             this.updates_background_install_minor.IsChecked = Global.Configuration.updates_allow_silent_minor;
-
-            this.atmoorb_enabled.IsChecked = Global.Configuration.atmoorb_enabled;
-            this.atmoorb_use_smoothing.IsChecked = Global.Configuration.atmoorb_use_smoothing;
-            this.atmoorb_IDs.Text = Global.Configuration.atmoorb_ids;
-            Global.dev_manager.NewDevicesInitialized += Dev_manager_NewDevicesInitialized;
-        }
-
-        private void Dev_manager_NewDevicesInitialized(object sender, EventArgs e)
-        {
-            try
-            {
-                Dispatcher.Invoke(
-                            () =>
-                            {
-                                this.about_connected_devices.Text = "Connected Devices\r\n" + Global.dev_manager.GetDevices();
-                                this.about_connected_devices.UpdateLayout();
-
-                                if (Global.Configuration.keyboard_brand == PreferredKeyboard.None && Global.kbLayout.Loaded_Localization == PreferredKeyboardLocalization.None)
-                                    Global.kbLayout.LoadBrand();
-
-                            });
-            }
-            catch (Exception ex)
-            {
-                Global.logger.LogLine(ex.ToString(), Logging_Level.Warning);
-            }
         }
 
         private void OnLayerRendered(System.Drawing.Bitmap map)
@@ -151,7 +132,6 @@ namespace Aurora.Settings
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            this.about_connected_devices.Text = "Connected Devices\r\n" + Global.dev_manager.GetDevices();
             Global.effengine.NewLayerRender += OnLayerRendered;
         }
 
@@ -387,6 +367,7 @@ namespace Aurora.Settings
 
         private void excluded_remove_Click(object sender, RoutedEventArgs e)
         {
+
             if (this.excluded_listbox.SelectedItem != null)
             {
                 if (Global.Configuration.excluded_programs.Contains((string)this.excluded_listbox.SelectedItem))
@@ -905,52 +886,6 @@ namespace Aurora.Settings
             }
         }
 
-        private void atmoorb_enabled_Checked(object sender, RoutedEventArgs e)
-        {
-            if (IsLoaded)
-            {
-                Global.Configuration.atmoorb_enabled = (this.atmoorb_enabled.IsChecked.HasValue) ? this.atmoorb_enabled.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
-
-            }
-        }
-        private void atmoorb_enabled_Unchecked(object sender, RoutedEventArgs e)
-        {
-            if (IsLoaded)
-            {
-                Global.Configuration.atmoorb_enabled = (this.atmoorb_enabled.IsChecked.HasValue) ? this.atmoorb_enabled.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
-            }
-        }
-
-
-        private void atmoorb_use_smoothing_Checked(object sender, RoutedEventArgs e)
-        {
-            if (IsLoaded)
-            {
-                Global.Configuration.atmoorb_use_smoothing = (this.atmoorb_use_smoothing.IsChecked.HasValue) ? this.atmoorb_use_smoothing.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
-            }
-        }
-
-        private void atmoorb_use_smoothing_Unchecked(object sender, RoutedEventArgs e)
-        {
-            if (IsLoaded)
-            {
-                Global.Configuration.atmoorb_use_smoothing = (this.atmoorb_use_smoothing.IsChecked.HasValue) ? this.atmoorb_use_smoothing.IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
-            }
-        }
-
-        private void atmoorb_IDs_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (IsLoaded)
-            {
-                Global.Configuration.atmoorb_ids = this.atmoorb_IDs.Text;
-                ConfigManager.Save(Global.Configuration);
-            }
-        }
-
         private void volume_overlay_dim_background_Checked(object sender, RoutedEventArgs e)
         {
             if (IsLoaded)
@@ -967,6 +902,103 @@ namespace Aurora.Settings
                 Global.Configuration.volume_overlay_settings.dim_color = Utils.ColorUtils.MediaColorToDrawingColor(this.volume_overlay_dim_color.SelectedColor.Value);
                 ConfigManager.Save(Global.Configuration);
             }
+        }
+
+        private void excluded_process_name_DropDownOpened(object sender, EventArgs e)
+        {
+            HashSet<string> processes = new HashSet<string>();
+
+            foreach (var p in Process.GetProcesses())
+            {
+                try
+                {
+                    processes.Add( Path.GetFileName( p.MainModule.FileName ) );
+                }
+                catch(Exception exc)
+                {
+
+                }
+            }
+
+            excluded_process_name.ItemsSource = processes.ToArray();
+        }
+
+        private void btnShowBitmapWindow_Click(object sender, RoutedEventArgs e)
+        {
+            if (winBitmapView == null)
+            {
+                if (bitmapViewOpen == true)
+                {
+                    System.Windows.MessageBox.Show("Keyboard Bitmap View already open.\r\nPlease close it.");
+                    return;
+                }
+
+                winBitmapView = new Window();
+                winBitmapView.Closed += WinBitmapView_Closed;
+                winBitmapView.ResizeMode = ResizeMode.NoResize;
+                winBitmapView.SizeToContent = SizeToContent.WidthAndHeight;
+
+                winBitmapView.Title = "Keyboard Bitmap View";
+                winBitmapView.Background = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
+                Global.effengine.NewLayerRender += Effengine_NewLayerRender;
+
+                imgBitmap.SnapsToDevicePixels = true;
+                imgBitmap.HorizontalAlignment = HorizontalAlignment.Stretch;
+                imgBitmap.VerticalAlignment = VerticalAlignment.Stretch;
+                imgBitmap.MinWidth = Effects.canvas_width;
+                imgBitmap.MinHeight = Effects.canvas_height;
+                imgBitmap.Width = Effects.canvas_width * 4;
+                imgBitmap.Height = Effects.canvas_height * 4;
+
+                winBitmapView.Content = imgBitmap;
+
+                winBitmapView.UpdateLayout();
+                winBitmapView.Show();
+            }
+            else
+            {
+                winBitmapView.BringIntoView();
+            }
+        }
+
+        private void Effengine_NewLayerRender(System.Drawing.Bitmap bitmap)
+        {
+            try
+            {
+                Dispatcher.Invoke(
+                    () =>
+                    {
+                        using (MemoryStream memory = new MemoryStream())
+                        {
+                            bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Png);
+                            memory.Position = 0;
+                            BitmapImage bitmapimage = new BitmapImage();
+                            bitmapimage.BeginInit();
+                            bitmapimage.StreamSource = memory;
+                            bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
+                            bitmapimage.EndInit();
+
+                            imgBitmap.Source = bitmapimage;
+                        }
+                    });
+            }
+            catch (Exception ex)
+            {
+                Global.logger.LogLine(ex.ToString(), Logging_Level.Warning);
+            }
+        }
+
+        private void WinBitmapView_Closed(object sender, EventArgs e)
+        {
+            winBitmapView = null;
+            Global.effengine.NewLayerRender -= Effengine_NewLayerRender;
+            bitmapViewOpen = false;
+        }
+
+        private void btnShowLogsFolder_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button)
+                System.Diagnostics.Process.Start(Global.logger.GetLogsDirectory());
         }
     }
 }

@@ -44,7 +44,8 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public KeySequence Sequence { get { return Logic._Sequence ?? _Sequence; } }
 
-        public LayerHandlerProperties () {
+        public LayerHandlerProperties()
+        {
             this.Default();
         }
 
@@ -69,7 +70,7 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public Color SecondaryColor { get { return Logic._SecondaryColor ?? _SecondaryColor ?? Color.Empty; } }
 
-        public LayerHandlerProperties2Color(bool assign_default = false) : base(assign_default) {}
+        public LayerHandlerProperties2Color(bool assign_default = false) : base(assign_default) { }
 
         public override void Default()
         {
@@ -95,7 +96,17 @@ namespace Aurora.Settings.Layers
 
         IStringProperty Properties { get; set; }
 
+        bool EnableSmoothing { get; set; }
+
+        bool EnableExclusionMask { get; set; }
+
+        KeySequence ExclusionMask { get; set; }
+
+        float Opacity { get; set; }
+
         EffectLayer Render(IGameState gamestate);
+
+        EffectLayer PostRenderFX(EffectLayer layer_render);
 
         void SetProfile(ProfileManager profile);
     }
@@ -137,14 +148,28 @@ namespace Aurora.Settings.Layers
             }
         }
 
+        public bool EnableSmoothing { get; set; }
+
+        public bool EnableExclusionMask { get; set; }
+
+        public KeySequence ExclusionMask { get; set; }
+
+        public float Opacity { get; set; }
+
         //public Color PrimaryColor { get; set; }
 
+        [JsonIgnore]
+        private EffectLayer _PreviousRender = new EffectLayer(); //Previous layer
+
+        [JsonIgnore]
+        private EffectLayer _PreviousSecondRender = new EffectLayer(); //Layer before previous
 
         public LayerHandler()
         {
             //Properties = new LayerHandlerProperties();
             //ScriptProperties = new LayerHandlerProperties();
-
+            ExclusionMask = new KeySequence();
+            Opacity = 1.0f;
         }
 
         public LayerHandler(LayerHandler other) : base()
@@ -155,6 +180,32 @@ namespace Aurora.Settings.Layers
         public virtual EffectLayer Render(IGameState gamestate)
         {
             return new EffectLayer();
+        }
+
+        public EffectLayer PostRenderFX(EffectLayer rendered_layer)
+        {
+            EffectLayer returnLayer = new EffectLayer(rendered_layer);
+
+            if (EnableSmoothing)
+            {
+                EffectLayer previousLayer = new EffectLayer(_PreviousRender);
+                EffectLayer previousSecondLayer = new EffectLayer(_PreviousSecondRender);
+
+                returnLayer = returnLayer + (previousLayer * 0.50) + (previousSecondLayer * 0.25);
+
+                //Update previous layers
+                _PreviousSecondRender = _PreviousRender;
+                _PreviousRender = rendered_layer;
+            }
+
+
+            //Last PostFX is exclusion
+            if (EnableExclusionMask)
+                returnLayer.Exclude(ExclusionMask);
+
+            returnLayer *= Opacity;
+
+            return returnLayer;
         }
 
         public virtual void SetProfile(ProfileManager profile)

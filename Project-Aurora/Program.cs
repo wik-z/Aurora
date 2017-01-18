@@ -113,8 +113,6 @@ namespace Aurora
                 }
             }
 
-            log4net.Config.BasicConfigurator.Configure();
-
             AppDomain currentDomain = AppDomain.CurrentDomain;
             if (!Global.isDebug)
                 currentDomain.UnhandledException += CurrentDomain_UnhandledException;
@@ -185,6 +183,7 @@ namespace Aurora
             }
 
             Global.logger.LogLine("Loading Device Manager", Logging_Level.Info);
+            Global.dev_manager.RegisterVariables();
             Global.dev_manager.Initialize();
 
             Global.logger.LogLine("Loading KB Layouts", Logging_Level.Info);

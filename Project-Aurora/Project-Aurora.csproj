@@ -120,8 +120,8 @@
       <HintPath>..\packages\CS-Script.bin.3.19.0.0\lib\net45\CSScriptLibrary.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CUE.NET, Version=1.1.0.2, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CUE.NET.1.1.0.2\lib\net45\CUE.NET.dll</HintPath>
+    <Reference Include="CUE.NET, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CUE.NET.1.1.1\lib\net45\CUE.NET.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Gma.System.MouseKeyHook, Version=5.4.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -151,10 +151,6 @@
       <HintPath>..\packages\IronPython.2.7.7\lib\Net45\IronPython.Wpf.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.Dynamic, Version=1.1.2.22, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
       <HintPath>..\packages\DynamicLanguageRuntime.1.1.2\lib\Net45\Microsoft.Dynamic.dll</HintPath>
       <Private>True</Private>
@@ -180,8 +176,8 @@
       <HintPath>..\packages\CS-Script.bin.3.19.0.0\lib\net45\Mono.CSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NAudio, Version=1.7.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NAudio.1.7.3\lib\net35\NAudio.dll</HintPath>
+    <Reference Include="NAudio, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.1.8.0\lib\net35\NAudio.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -236,6 +232,15 @@
     <Compile Include="Controls\ArrangeListBox.cs" />
     <Compile Include="Controls\ColorZones.xaml.cs">
       <DependentUpon>ColorZones.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Control_DeviceItem.xaml.cs">
+      <DependentUpon>Control_DeviceItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Control_DeviceManager.xaml.cs">
+      <DependentUpon>Control_DeviceManager.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Control_VariableRegistryItem.xaml.cs">
+      <DependentUpon>Control_VariableRegistryItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\EditorResources\MoveThumb.cs" />
     <Compile Include="Controls\EditorResources\ResizeThumb.cs" />
@@ -553,6 +558,9 @@
     <None Include="kb_layouts\Extra Features\corsair_strafe_right_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="kb_layouts\Extra Features\generic_peripheral.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="kb_layouts\Extra Features\logitech_g900_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -577,10 +585,16 @@
     <None Include="kb_layouts\Extra Features\masterkeys_pro_l_right_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="kb_layouts\Extra Features\masterkeys_pro_m_white_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="kb_layouts\logitech_g410.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\logitech_g810.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\masterkeys_pro_l_white.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\razer_blackwidow_te.json">
@@ -623,6 +637,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\Plain Keyboard\layout.us.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\masterkeys_pro_m_white.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Scripts\Devices\example_script.cs">
@@ -766,6 +783,7 @@
     <Compile Include="Settings\Layers\ImageLayerHandler.cs" />
     <Compile Include="Settings\Layers\SolidColorLayerHandler.cs" />
     <Compile Include="Settings\Layers\SolidFillLayerHandler.cs" />
+    <Compile Include="Settings\VariableRegistry.cs" />
     <Compile Include="Settings\Window_LayerLogicEditor.xaml.cs">
       <DependentUpon>Window_LayerLogicEditor.xaml</DependentUpon>
     </Compile>
@@ -793,6 +811,9 @@
     <Compile Include="Settings\KeySequence.cs" />
     <Compile Include="Settings\LayerEffectConfig.cs" />
     <Compile Include="Settings\ProfileSettings.cs" />
+    <Compile Include="Settings\Window_VariableRegistryEditor.xaml.cs">
+      <DependentUpon>Window_VariableRegistryEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utils\BitmapUtils.cs" />
     <Compile Include="Utils\BrushUtils.cs" />
     <Compile Include="Utils\GameStateUtils.cs" />
@@ -837,6 +858,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\ColorZones.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Control_DeviceItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Control_DeviceManager.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Control_VariableRegistryItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1156,6 +1189,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Settings\Window_VariableRegistryEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Themes\MetroDark\MetroDark.MSControls.Core.Implicit.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1297,6 +1334,7 @@
     <Resource Include="Resources\Layers_Drag.png" />
     <Resource Include="Resources\Layers_Add.png" />
     <Resource Include="Resources\Layers_Remove.png" />
+    <Resource Include="Resources\LayerConfig_icon.png" />
     <Content Include="SDKDLL.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1366,12 +1404,12 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\CUE.NET.1.1.0.2\build\net45\CUE.NET.targets" Condition="Exists('..\packages\CUE.NET.1.1.0.2\build\net45\CUE.NET.targets')" />
+  <Import Project="..\packages\CUE.NET.1.1.1\build\net45\CUE.NET.targets" Condition="Exists('..\packages\CUE.NET.1.1.1\build\net45\CUE.NET.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\CUE.NET.1.1.0.2\build\net45\CUE.NET.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CUE.NET.1.1.0.2\build\net45\CUE.NET.targets'))" />
+    <Error Condition="!Exists('..\packages\CUE.NET.1.1.1\build\net45\CUE.NET.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CUE.NET.1.1.1\build\net45\CUE.NET.targets'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
