@@ -13,89 +13,121 @@ using System.Linq;
 using Aurora.Settings.Layers;
 using System.Reflection;
 using System.Windows.Media.Imaging;
+using System.Runtime.CompilerServices;
 
 namespace Aurora.Settings
 {
-    public class ProfileManager
+    public class LightEventConfig : NotifyPropertyChangedEx
+    {
+        //TODO: Add NotifyPropertyChanged to properties
+        public string[] ProcessNames { get; set; }
+
+        public string Name { get; set; }
+
+        public string ID { get; set; }
+
+        public string AppID { get; set; }
+
+        public Type SettingsType { get; set; } = typeof(ProfileSettings);
+
+        public Type OverviewControlType { get; set; }
+
+        public Type GameStateType { get; set; }
+
+        public LightEvent Event { get; set; }
+
+        public int? UpdateInterval { get; set; } = null;
+
+        public string IconURI { get; set; }
+
+        public HashSet<string> ExtraAvailableLayers { get; set; } = new HashSet<string>();
+
+        protected LightEventType type;
+        public LightEventType Type
+        {
+            get { return type; }
+            protected set
+            {
+                object old = type;
+                object newVal = value;
+                type = value;
+                InvokePropertyChanged(old, newVal);
+            }
+        }
+    }
+
+    public class ProfileManager : IInit, ILightEvent
     {
         #region Public Properties
-        public string Name { get; set; }
-        public string InternalName { get; set; }
-        public string[] ProcessNames { get; set; }
-        public string IconURI { get; set; }
+        public bool Initialized { get; protected set; } = false;
         public ProfileSettings Settings { get; set; }
-        public LightEvent Event { get; set; }
         public Dictionary<string, ProfileSettings> Profiles { get; set; } //Profile name, Profile Settings
         public Dictionary<string, Tuple<Type, Type>> ParameterLookup { get; set; } //Key = variable path, Value = {Return type, Parameter type}
         public bool HasLayers { get; set; }
-        public HashSet<LayerType> AvailableLayers { get; set; }
         public event EventHandler ProfileChanged;
+        public bool ScriptsLoaded { get; protected set; }
+        public LightEventConfig Config { get; protected set; }
+        public string ID { get { return Config.ID; } }
+        public Type GameStateType { get { return Config.GameStateType; } }
+        public bool IsEnabled { get { return Settings.IsEnabled; } }
+        public event PropertyChangedExEventHandler PropertyChanged;
+        protected LightEventType type;
+        public LightEventType Type
+        {
+            get { return type; }
+            protected set
+            {
+                object old = type;
+                object newVal = value;
+                type = value;
+                InvokePropertyChanged(old, newVal);
+            }
+        }
         #endregion
 
         #region Internal Properties
         internal ImageSource Icon { get; set; }
         internal UserControl Control { get; set; }
-        internal Dictionary<string, dynamic> EffectScripts { get; set; }
+        internal Dictionary<string, IEffectScript> EffectScripts { get; set; }
         #endregion
 
         #region Private Fields/Properties
-        protected Type SettingsType = typeof(ProfileSettings);
-        protected Type ControlType = null;
         #endregion
 
-        public ProfileManager(string name, string internal_name, string[] process_names, Type settings, Type control, LightEvent game_event)
+        public ProfileManager(LightEventConfig config)
         {
-            Name = name;
-            InternalName = internal_name;
-            ProcessNames = process_names;
-            Icon = null;
-            Control = null;
-            ControlType = control;
-            SettingsType = settings;
-            Settings = (ProfileSettings)Activator.CreateInstance(settings);
-            game_event.Profile = this;
-            Event = game_event;
+            Config = config;
+
+            Settings = (ProfileSettings)Activator.CreateInstance(config.SettingsType);
+            config.Event.Profile = this;
             Profiles = new Dictionary<string, ProfileSettings>();
-            EffectScripts = new Dictionary<string, dynamic>();
-            if (game_event._game_state != null)
-            {
-                ParameterLookup = Utils.GameStateUtils.ReflectGameStateParameters(game_event._game_state.GetType());
-            }
-            else
-                ParameterLookup = new Dictionary<string, Tuple<Type, Type>>();
-
-            if (AvailableLayers == null)
-                AvailableLayers = new HashSet<LayerType>();
-
-            AvailableLayers.Add(LayerType.Default);
-            AvailableLayers.Add(LayerType.Solid);
-            AvailableLayers.Add(LayerType.SolidFilled);
-            AvailableLayers.Add(LayerType.Gradient);
-            AvailableLayers.Add(LayerType.GradientFill);
-            AvailableLayers.Add(LayerType.Breathing);
-            AvailableLayers.Add(LayerType.Blinking);
-            AvailableLayers.Add(LayerType.Image);
-            AvailableLayers.Add(LayerType.Percent);
-            AvailableLayers.Add(LayerType.PercentGradient);
-            AvailableLayers.Add(LayerType.Interactive);
-            AvailableLayers.Add(LayerType.ShortcutAssistant);
-            AvailableLayers.Add(LayerType.Equalizer);
-            AvailableLayers.Add(LayerType.Ambilight);
-            AvailableLayers.Add(LayerType.LockColor);
-
-            LoadProfiles();
+            EffectScripts = new Dictionary<string, IEffectScript>();
+            ParameterLookup = Utils.GameStateUtils.ReflectGameStateParameters(config.GameStateType);
         }
 
-        public ProfileManager(string name, string internal_name, string process_name, Type settings, Type control, LightEvent game_event) : this(name, internal_name, new string[] { process_name }, settings, control, game_event) { }
+        public bool Initialize()
+        {
+            if (Initialized)
+                return Initialized;
+
+            LoadProfiles();
+            Initialized = true;
+            return Initialized;
+        }
+
+        protected void InvokePropertyChanged(object oldValue, object newValue, [CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedExEventArgs(propertyName, oldValue, newValue));
+        }
 
         public virtual UserControl GetUserControl()
         {
-            return Control ?? (Control = (UserControl)Activator.CreateInstance(this.ControlType, this));
+            return Control ?? (Control = (UserControl)Activator.CreateInstance(this.Config.OverviewControlType, this));
         }
 
         public virtual ImageSource GetIcon()
         {
-            return Icon ?? (Icon = new BitmapImage(new Uri(IconURI, UriKind.Relative)));
+            return Icon ?? (Icon = new BitmapImage(new Uri(Config.IconURI, UriKind.Relative)));
         }
 
         public void SwitchToProfile(string profile_name)
@@ -136,8 +168,8 @@ namespace Aurora.Settings
         protected ProfileSettings CloneSettings(ProfileSettings settings)
         {
             return (ProfileSettings)JsonConvert.DeserializeObject(
-                    JsonConvert.SerializeObject(settings, SettingsType, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All }),
-                    SettingsType,
+                    JsonConvert.SerializeObject(settings, Config.SettingsType, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All }),
+                    Config.SettingsType,
                     new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All }
                     ); //I know this is bad. You can laugh at me for this one. :(
         }
@@ -152,14 +184,14 @@ namespace Aurora.Settings
 
         public virtual string GetProfileFolderPath()
         {
-            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "Profiles", InternalName);
+            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "Profiles", Config.ID);
         }
 
         public void ResetProfile()
         {
             try
             {
-                Settings = (ProfileSettings)Activator.CreateInstance(SettingsType);
+                Settings = (ProfileSettings)Activator.CreateInstance(Config.SettingsType);
 
                 this.InitalizeScriptSettings(Settings, true);
 
@@ -181,10 +213,11 @@ namespace Aurora.Settings
 
                     if (!String.IsNullOrWhiteSpace(profile_content))
                     {
-                        ProfileSettings prof = (ProfileSettings)JsonConvert.DeserializeObject(profile_content, SettingsType, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All });
+                        ProfileSettings prof = (ProfileSettings)JsonConvert.DeserializeObject(profile_content, Config.SettingsType, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All });
                         foreach (Layer lyr in prof.Layers)
                         {
                             lyr.AnythingChanged += this.SaveProfilesEvent;
+                            lyr.SetProfile(this);
                         }
 
                         prof.Layers.CollectionChanged += (s, e) =>
@@ -208,32 +241,52 @@ namespace Aurora.Settings
             catch (Exception exc)
             {
                 Global.logger.LogLine(string.Format("Exception Loading Profile: {0}, Exception: {1}", path, exc), Logging_Level.Error);
+                if (Path.GetFileNameWithoutExtension(path).Equals("default"))
+                {
+                    string newPath = path + ".corrupted";
+                    File.Move(path, newPath);
+                    this.SaveProfile(path, Settings);
+                    MessageBox.Show($"Default profile for {this.Config.Name} could not be loaded.\nMoved to {newPath}, reset to default settings.\nException={exc}", "Error loading default profile", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+
+                //if (Global.isDebug)
+                    //throw exc;
             }
 
             return null;
         }
 
-        public void RegisterEffect(string key, dynamic obj)
+        public bool RegisterEffect(string key, IEffectScript obj)
         {
             if (this.EffectScripts.ContainsKey(key))
             {
                 Global.logger.LogLine(string.Format("Effect script with key {0} already exists!", key), Logging_Level.External);
-                return;
+                return false;
             }
 
-            if (obj.GetType().GetMethod("UpdateLights") != null || obj.UpdateLights != null)
-            {
-                this.EffectScripts.Add(key, obj);
-            }
-            else
-            {
-                Global.logger.LogLine(string.Format("Effect script with key {0} is missing a method definition for 'update'", key), Logging_Level.External);
-            }
+            this.EffectScripts.Add(key, obj);
+
+            return true;
+        }
+
+        public virtual void UpdateLights(EffectFrame frame)
+        {
+            this.Config.Event.UpdateLights(frame);
+        }
+
+        public virtual void SetGameState(IGameState state)
+        {
+            this.Config.Event.SetGameState(state);
+        }
+
+        public virtual void ResetGameState()
+        {
+            Config.Event.ResetGameState();
         }
 
         public virtual void UpdateEffectScripts(Queue<EffectLayer> layers, IGameState state = null)
         {
-            var _scripts = new Dictionary<string, ScriptSettings>(this.Settings.ScriptSettings).Where(s => s.Value.Enabled);
+            /*var _scripts = new Dictionary<string, ScriptSettings>(this.Settings.ScriptSettings).Where(s => s.Value.Enabled);
 
             foreach (KeyValuePair<string, ScriptSettings> scr in _scripts)
             {
@@ -260,11 +313,16 @@ namespace Aurora.Settings
                     scr.Value.ExceptionHit = true;
                     scr.Value.Exception = exc;
                 }
-            }
+            }*/
         }
 
-        protected void LoadScripts(string profiles_path)
+        protected void LoadScripts(string profiles_path, bool force = false)
         {
+            if (!force && ScriptsLoaded)
+                return;
+
+            this.EffectScripts.Clear();
+
             string scripts_path = Path.Combine(profiles_path, Global.ScriptDirectory);
             if (!Directory.Exists(scripts_path))
                 Directory.CreateDirectory(scripts_path);
@@ -278,32 +336,38 @@ namespace Aurora.Settings
                     {
                         case ".py":
                             var scope = Global.PythonEngine.ExecuteFile(script);
-                            dynamic main_type;
-                            if (scope.TryGetVariable("main", out main_type))
+                            foreach (var v in scope.GetItems())
                             {
-                                dynamic obj = Global.PythonEngine.Operations.CreateInstance(main_type);
-                                if (obj.ID != null)
+                                if (v.Value is IronPython.Runtime.Types.PythonType)
                                 {
-                                    this.RegisterEffect(obj.ID, obj);
+                                    Type typ = ((IronPython.Runtime.Types.PythonType)v.Value).__clrtype__();
+                                    if (!typ.IsInterface && typeof(IEffectScript).IsAssignableFrom(typ))
+                                    {
+                                        IEffectScript obj = Global.PythonEngine.Operations.CreateInstance(v.Value) as IEffectScript;
+                                        if (obj != null)
+                                        {
+                                            if (!(obj.ID != null && this.RegisterEffect(obj.ID, obj)))
+                                                Global.logger.LogLine($"Script \"{script}\" must have a unique string ID variable for the effect {v.Key}", Logging_Level.External);
+                                        }
+                                        else
+                                            Global.logger.LogLine($"Could not create instance of Effect Script: {v.Key} in script: \"{script}\"");
+                                    }
                                 }
-                                else
-                                    Global.logger.LogLine(string.Format("Script \"{0}\" does not have a public ID string variable", script), Logging_Level.External);
                             }
-                            else
-                                Global.logger.LogLine(string.Format("Script \"{0}\" does not contain a public 'main' class", script), Logging_Level.External);
+
 
                             break;
                         case ".cs":
                             System.Reflection.Assembly script_assembly = CSScript.LoadCodeFrom(script);
+                            Type effectType = typeof(IEffectScript);
                             foreach (Type typ in script_assembly.ExportedTypes)
                             {
-                                dynamic obj = Activator.CreateInstance(typ);
-                                if (obj.ID != null)
+                                if (effectType.IsAssignableFrom(typ))
                                 {
-                                    this.RegisterEffect(obj.ID, obj);
+                                    IEffectScript obj = (IEffectScript)Activator.CreateInstance(typ);
+                                    if (!(obj.ID != null && this.RegisterEffect(obj.ID, obj)))
+                                        Global.logger.LogLine(string.Format("Script \"{0}\" must have a unique string ID variable for the effect {1}", script, typ.FullName), Logging_Level.External);
                                 }
-                                else
-                                    Global.logger.LogLine(string.Format("Script \"{0}\" does not have a public ID string variable for the effect {1}", script, typ.FullName), Logging_Level.External);
                             }
 
                             break;
@@ -367,7 +431,7 @@ namespace Aurora.Settings
             }
             else
             {
-                Global.logger.LogLine(string.Format("Profiles directory for {0} does not exist.", Name), Logging_Level.Info, false);
+                Global.logger.LogLine(string.Format("Profiles directory for {0} does not exist.", Config.Name), Logging_Level.Info, false);
             }
         }
 
@@ -413,6 +477,11 @@ namespace Aurora.Settings
             {
                 Global.logger.LogLine("Exception during SaveProfiles, " + exc, Logging_Level.Error);
             }
+        }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -8,15 +8,16 @@ namespace Aurora.EffectsEngine.Animations
     {
         private List<AnimationLine> _lines;
 
-        public AnimationLines(AnimationLine[] lines)
+        public AnimationLines(AnimationLine[] lines, float duration = 0.0f)
         {
             _lines = new List<AnimationLine>(lines);
+            _duration = duration;
         }
 
-        public override void Draw(Graphics g)
+        public override void Draw(Graphics g, float scale = 1.0f)
         {
             foreach( AnimationLine line in _lines)
-                line.Draw(g);
+                line.Draw(g, scale);
         }
 
         public override AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)
@@ -30,6 +31,8 @@ namespace Aurora.EffectsEngine.Animations
             {
                 throw new NotImplementedException();
             }
+
+            amount = GetTransitionValue(amount);
 
             List<AnimationLine> newlines = new List<AnimationLine>();
 
@@ -49,7 +52,8 @@ namespace Aurora.EffectsEngine.Animations
 
         public bool Equals(AnimationLines p)
         {
-            return _lines.Equals(p._lines);
+            return _lines.Equals(p._lines) &&
+                _duration.Equals(p._duration);
         }
 
         public override int GetHashCode()
@@ -58,6 +62,7 @@ namespace Aurora.EffectsEngine.Animations
             {
                 int hash = 17;
                 hash = hash * 23 + _lines.GetHashCode();
+                hash = hash * 23 + _duration.GetHashCode();
                 return hash;
             }
         }

@@ -17,7 +17,7 @@ namespace Aurora.Settings.Layers
     /// All available layer types. Note: There is a large overhead for generap purpose layers, so there is ample room for adding new layers that apply to all profiles.
     /// Each game reserves 50 unique layer types.
     /// </summary>
-    public enum LayerType
+    /*public enum LayerType
     {
         [Description("Default Layer")]
         Default = 0,
@@ -42,6 +42,9 @@ namespace Aurora.Settings.Layers
 
         [Description("Image Layer")]
         Image = 122,
+
+        [Description("Script Layer")]
+        Script = 123,
 
         [Description("Percent Effect Layer")]
         Percent = 200,
@@ -77,7 +80,7 @@ namespace Aurora.Settings.Layers
         Dota2Items = 803,
 
         [Description("Dota 2 Hero Abiliy Effects Layer")]
-        Dota2HeroAbiltiyEffects = 804,
+        Dota2HeroAbilityEffects = 804,
 
         [Description("Dota 2 Killstreak Layer")]
         Dota2Killstreak = 805,
@@ -118,7 +121,7 @@ namespace Aurora.Settings.Layers
         [Description("Payday 2 States Layer")]
         PD2States = 1002,
 
-    }
+    }*/
 
     /// <summary>
     /// A class representing a default settings layer
@@ -179,9 +182,9 @@ namespace Aurora.Settings.Layers
             }
         }
 
-        protected LayerType _Type;
+        /*protected string _Type;
 
-        public LayerType Type
+        public string Type
         {
             get { return _Type; }
             set
@@ -189,7 +192,7 @@ namespace Aurora.Settings.Layers
                 _Type = value;
                 AnythingChanged?.Invoke(this, null);
             }
-        }
+        }*/
 
         protected ObservableCollection<LogicItem> _Logics;
 

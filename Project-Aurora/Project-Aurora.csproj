@@ -233,11 +233,29 @@
     <Compile Include="Controls\ColorZones.xaml.cs">
       <DependentUpon>ColorZones.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Control_AnimationEditor.xaml.cs">
+      <DependentUpon>Control_AnimationEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Control_AnimationFrameItem.xaml.cs">
+      <DependentUpon>Control_AnimationFrameItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Control_AnimationMixPresenter.xaml.cs">
+      <DependentUpon>Control_AnimationMixPresenter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Control_AnimationTrackPresenter.xaml.cs">
+      <DependentUpon>Control_AnimationTrackPresenter.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Control_DeviceItem.xaml.cs">
       <DependentUpon>Control_DeviceItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Control_DeviceManager.xaml.cs">
       <DependentUpon>Control_DeviceManager.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Control_Ruler.xaml.cs">
+      <DependentUpon>Control_Ruler.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Control_VariableIItem.xaml.cs">
+      <DependentUpon>Control_VariableIItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Control_VariableRegistryItem.xaml.cs">
       <DependentUpon>Control_VariableRegistryItem.xaml</DependentUpon>
@@ -434,6 +452,7 @@
     <Compile Include="Profiles\Payday 2\Layers\PD2StatesLayerHandler.cs" />
     <Compile Include="Profiles\Payday 2\Layers\PD2FlashbangLayerHandler.cs" />
     <Compile Include="Profiles\Payday 2\Layers\PD2BackgroundLayerHandler.cs" />
+    <Compile Include="Profiles\ProfilesManager.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\GameState_RocketLeague.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\Nodes\Match.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\Nodes\Player.cs" />
@@ -493,7 +512,6 @@
     <Compile Include="Profiles\TheDivision\Control_TheDivision.xaml.cs">
       <DependentUpon>Control_TheDivision.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\TheDivision\GameEvent_TheDivision.cs" />
     <Compile Include="Profiles\TheDivision\TheDivisionProfileManager.cs" />
     <Compile Include="Profiles\TheDivision\TheDivisionSettings.cs" />
     <Compile Include="Profiles\TheTalosPrinciple\Control_TalosPrinciple.xaml.cs">
@@ -513,6 +531,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Control_ScriptManager.xaml.cs">
+      <DependentUpon>Control_ScriptManager.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\INotifyPropertyChangedEx.cs" />
+    <Compile Include="Utils\ProcessUtils.cs" />
+    <Compile Include="Utils\ActiveProcessMonitor.cs" />
     <None Include="App.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -659,7 +683,7 @@
     <Compile Include="EffectsEngine\EffectFrame.cs" />
     <Compile Include="EffectsEngine\EffectLayer.cs" />
     <Compile Include="EffectsEngine\Effects.cs" />
-    <Compile Include="GameEventHandler.cs" />
+    <Content Include="GameEventHandler.cs" />
     <Compile Include="Profiles\CSGO\Control_CSGO.xaml.cs">
       <DependentUpon>Control_CSGO.xaml</DependentUpon>
     </Compile>
@@ -709,6 +733,7 @@
     <Compile Include="Settings\Control_LayerControlPresenter.xaml.cs">
       <DependentUpon>Control_LayerControlPresenter.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings\IInit.cs" />
     <Compile Include="Settings\Keycaps\Control_ColorizedKeycapBlank.xaml.cs">
       <DependentUpon>Control_ColorizedKeycapBlank.xaml</DependentUpon>
     </Compile>
@@ -755,6 +780,9 @@
     <Compile Include="Settings\Layers\Control_PercentLayer.xaml.cs">
       <DependentUpon>Control_PercentLayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Layers\Control_ScriptLayer.xaml.cs">
+      <DependentUpon>Control_ScriptLayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Layers\Control_ShortcutAssistantLayer.xaml.cs">
       <DependentUpon>Control_ShortcutAssistantLayer.xaml</DependentUpon>
     </Compile>
@@ -778,20 +806,19 @@
     <Compile Include="Settings\Layers\LockColourLayerHandler.cs" />
     <Compile Include="Settings\Layers\PercentGradientLayerHandler.cs" />
     <Compile Include="Settings\Layers\PercentLayerHandler.cs" />
+    <Compile Include="Settings\Layers\ScriptLayerHandler.cs" />
     <Compile Include="Settings\Layers\ShortcutAssistantLayerHandler.cs" />
     <Compile Include="Settings\Layers\GradientLayerHandler.cs" />
     <Compile Include="Settings\Layers\ImageLayerHandler.cs" />
     <Compile Include="Settings\Layers\SolidColorLayerHandler.cs" />
     <Compile Include="Settings\Layers\SolidFillLayerHandler.cs" />
+    <Compile Include="Settings\ScriptBase.cs" />
     <Compile Include="Settings\VariableRegistry.cs" />
     <Compile Include="Settings\Window_LayerLogicEditor.xaml.cs">
       <DependentUpon>Window_LayerLogicEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\Control_LayerManager.xaml.cs">
       <DependentUpon>Control_LayerManager.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Control_ScriptManager.xaml.cs">
-      <DependentUpon>Control_ScriptManager.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\Control_ProfileManager.xaml.cs">
       <DependentUpon>Control_ProfileManager.xaml</DependentUpon>
@@ -811,12 +838,16 @@
     <Compile Include="Settings\KeySequence.cs" />
     <Compile Include="Settings\LayerEffectConfig.cs" />
     <Compile Include="Settings\ProfileSettings.cs" />
+    <Compile Include="Controls\Control_VariableRegistryEditor.xaml.cs">
+      <DependentUpon>Control_VariableRegistryEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Window_VariableRegistryEditor.xaml.cs">
       <DependentUpon>Window_VariableRegistryEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\BitmapUtils.cs" />
     <Compile Include="Utils\BrushUtils.cs" />
     <Compile Include="Utils\GameStateUtils.cs" />
+    <Compile Include="Utils\GenericUtils.cs" />
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="Devices\Logitech\LogitechGSDK.cs" />
     <Compile Include="NetworkListener.cs" />
@@ -861,6 +892,22 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Control_AnimationEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Control_AnimationFrameItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Control_AnimationMixPresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Control_AnimationTrackPresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Control_DeviceItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -868,6 +915,14 @@
     <Page Include="Controls\Control_DeviceManager.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Control_Ruler.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Control_VariableIItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Control_VariableRegistryItem.xaml">
       <SubType>Designer</SubType>
@@ -1089,6 +1144,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Settings\Control_ScriptManager.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Settings\Keycaps\Control_ColorizedKeycapBlank.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1145,6 +1204,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Settings\Layers\Control_ScriptLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Settings\Layers\Control_ShortcutAssistantLayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1173,10 +1236,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Settings\Control_ScriptManager.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Settings\Control_ProfileManager.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1186,6 +1245,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Settings\Layers\Control_DefaultLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Control_VariableRegistryEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1335,6 +1398,7 @@
     <Resource Include="Resources\Layers_Add.png" />
     <Resource Include="Resources\Layers_Remove.png" />
     <Resource Include="Resources\LayerConfig_icon.png" />
+    <Resource Include="Resources\AnimationEditor_ScrubberTop.png" />
     <Content Include="SDKDLL.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

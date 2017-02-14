@@ -4,12 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Aurora.Settings"
-             xmlns:Controls ="clr-namespace:Aurora.Controls"
+             xmlns:controls="clr-namespace:Aurora.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="203.81" d:DesignWidth="200" Background="Black" SizeToContent="WidthAndHeight" MinWidth="200" MinHeight="200" MaxHeight="600" MaxWidth="800">
+             d:DesignHeight="300" d:DesignWidth="300" Background="Black" SizeToContent="WidthAndHeight" MinWidth="200" MinHeight="200" MaxHeight="600" MaxWidth="800">
     <Grid>
-        <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="10" MaxWidth="800" MaxHeight="600" >
-            <StackPanel x:Name="stack_Options" />
-        </ScrollViewer>
+        <controls:Control_VariableRegistryEditor x:Name="VarRegistryEditor" Margin="10"/>
     </Grid>
 </Window>

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace Aurora.EffectsEngine.Animations
@@ -27,10 +28,13 @@ namespace Aurora.EffectsEngine.Animations
 
         public AnimationMix AddTrack(AnimationTrack track)
         {
-            if (_tracks.ContainsKey(track.GetName()))
-                _tracks[track.GetName()] = track;
-            else
-                _tracks.Add(track.GetName(), track);
+            if(track != null)
+            {
+                if (_tracks.ContainsKey(track.GetName()))
+                    _tracks[track.GetName()] = track;
+                else
+                    _tracks.Add(track.GetName(), track);
+            }
 
             return this;
         }
@@ -61,20 +65,57 @@ namespace Aurora.EffectsEngine.Animations
                 return null;
         }
 
-        public void Draw(Graphics g, float time)
+        public Dictionary<string, AnimationTrack> GetTracks()
+        {
+            return new Dictionary<string, AnimationTrack>(_tracks);
+        }
+
+        public bool AnyActiveTracksAt(float time)
+        {
+            Dictionary<string, AnimationTrack> _local = new Dictionary<string, AnimationTrack>(_tracks);
+
+            bool return_val = false;
+
+            foreach (KeyValuePair<string, AnimationTrack> track in _local)
+            {
+                if (track.Value.ContainsAnimationAt(time))
+                    return_val = true;
+            }
+
+            return return_val;
+        }
+
+        public void Draw(Graphics g, float time, float scale = 1.0f)
         {
             Dictionary<string, AnimationTrack> _local = new Dictionary<string, AnimationTrack>(_tracks);
 
             foreach (KeyValuePair<string, AnimationTrack> track in _local)
             {
                 if (track.Value.ContainsAnimationAt(time))
-                    track.Value.GetFrame(time).Draw(g);
+                {
+                    try
+                    {
+                        track.Value.GetFrame(time).Draw(g, scale);
+                    }
+                    catch(Exception exc)
+                    {
+                        System.Console.WriteLine();
+                    }
+
+                }
                 else
                 {
                     if (_automatically_remove_complete)
                         RemoveTrack(track.Key);
                 }
             }
+        }
+
+        public AnimationMix Clear()
+        {
+            _tracks.Clear();
+
+            return this;
         }
 
         public override bool Equals(object obj)

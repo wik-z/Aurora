@@ -1,61 +1,120 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace Aurora.EffectsEngine.Animations
 {
     public class AnimationCircle : AnimationFrame
     {
+        internal float _radius = 0.0f;
+        internal PointF _center = new PointF();
 
-        public AnimationCircle(Rectangle dimension, Color color, int width = 1) : base(dimension, color, width)
+        public float Radius { get { return _radius; } }
+        public PointF Center { get { return _center; } }
+
+
+        public AnimationFrame SetRadius(float radius)
         {
+            _radius = radius;
+            _dimension = new RectangleF(_center.X - _radius, _center.Y - _radius, 2.0f * _radius, 2.0f * _radius);
+            _invalidated = true;
+
+            return this;
         }
 
-        public AnimationCircle(RectangleF dimension, Color color, int width = 1) : base(dimension, color, width)
+        public AnimationFrame SetCenter(PointF center)
         {
+            _center = center;
+            _dimension = new RectangleF(_center.X - _radius, _center.Y - _radius, 2.0f * _radius, 2.0f * _radius);
+            _invalidated = true;
+
+            return this;
         }
 
-        public AnimationCircle(PointF center, float radius, Color color, int width = 1)
+        public AnimationCircle()
         {
-            _dimension = new RectangleF(center.X - radius, center.Y - radius, 2.0f * radius, 2.0f * radius);
+            _radius = 0;
+            _center = new PointF(0, 0);
+            _dimension = new RectangleF(_center.X - _radius, _center.Y - _radius, 2.0f * _radius, 2.0f * _radius);
+            _color = Utils.ColorUtils.GenerateRandomColor();
+            _width = 1;
+            _duration = 0.0f;
+        }
+
+        public AnimationCircle(Rectangle dimension, Color color, int width = 1, float duration = 0.0f) : base(dimension, color, width, duration)
+        {
+            _radius = dimension.Width / 2.0f;
+            _center = new PointF(dimension.X + _radius, dimension.Y + _radius);
+        }
+
+        public AnimationCircle(RectangleF dimension, Color color, int width = 1, float duration = 0.0f) : base(dimension, color, width, duration)
+        {
+            _radius = dimension.Width / 2.0f;
+            _center = new PointF(dimension.X + _radius, dimension.Y + _radius);
+        }
+
+        public AnimationCircle(PointF center, float radius, Color color, int width = 1, float duration = 0.0f)
+        {
+            _radius = radius;
+            _center = center;
+            _dimension = new RectangleF(_center.X - _radius, _center.Y - _radius, 2.0f * _radius, 2.0f * _radius);
             _color = color;
             _width = width;
+            _duration = duration;
         }
 
-        public AnimationCircle(float x, float y, float radius, Color color, int width = 1)
+        public AnimationCircle(float x, float y, float radius, Color color, int width = 1, float duration = 0.0f)
         {
-            _dimension = new RectangleF(x - radius, y - radius, 2.0f * radius, 2.0f * radius);
+            _radius = radius;
+            _center = new PointF(x, y);
+            _dimension = new RectangleF(_center.X - _radius, _center.Y - _radius, 2.0f * _radius, 2.0f * _radius);
             _color = color;
             _width = width;
+            _duration = duration;
         }
 
-        public override void Draw(Graphics g)
+        public override void Draw(Graphics g, float scale = 1.0f)
         {
-            if(_pen == null)
+            if (_pen == null || _invalidated)
             {
                 _pen = new Pen(_color);
                 _pen.Width = _width;
                 _pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Center;
+
+                _invalidated = false;
             }
 
-            g.DrawEllipse(_pen, _dimension);
+            _pen.ScaleTransform(scale, scale);
+            RectangleF _scaledDimension = new RectangleF(_dimension.X * scale, _dimension.Y * scale, _dimension.Width * scale, _dimension.Height * scale);
+
+            Matrix rotationMatrix = new Matrix();
+            rotationMatrix.RotateAt(-_angle, new PointF(_center.X * scale, _center.Y * scale), MatrixOrder.Append);
+
+            Matrix originalMatrix = g.Transform;
+            g.Transform = rotationMatrix;
+            g.DrawEllipse(_pen, _scaledDimension);
+            g.Transform = originalMatrix;
         }
 
         public override AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)
         {
-            if(!(otherAnim is AnimationCircle))
+            if (!(otherAnim is AnimationCircle))
             {
                 throw new FormatException("Cannot blend with another type");
             }
 
-            RectangleF newrect = new RectangleF((float)(_dimension.X * (1.0 - amount) + otherAnim._dimension.X * (amount)),
-                (float)(_dimension.Y * (1.0 - amount) + otherAnim._dimension.Y * (amount)),
-                (float)(_dimension.Width * (1.0 - amount) + otherAnim._dimension.Width * (amount)),
-                (float)(_dimension.Height * (1.0 - amount) + otherAnim._dimension.Height * (amount))
+            amount = GetTransitionValue(amount);
+
+            RectangleF newrect = new RectangleF((float)CalculateNewValue(_dimension.X, otherAnim._dimension.X, amount),
+                (float)CalculateNewValue(_dimension.Y, otherAnim._dimension.Y, amount),
+                (float)CalculateNewValue(_dimension.Width, otherAnim._dimension.Width, amount),
+                (float)CalculateNewValue(_dimension.Height, otherAnim._dimension.Height, amount)
                 );
 
-            int newwidth = (int)((_width * (1.0 - amount)) + (otherAnim._width * (amount)));
+            int newwidth = (int)CalculateNewValue(_width, otherAnim._width, amount);
+            float newAngle = (float)CalculateNewValue(_angle, otherAnim._angle, amount);
 
-            return new AnimationCircle(newrect, Utils.ColorUtils.BlendColors(_color, otherAnim._color, amount), newwidth);
+            return new AnimationCircle(newrect, Utils.ColorUtils.BlendColors(_color, otherAnim._color, amount), newwidth).SetAngle(newAngle);
         }
 
         public override bool Equals(object obj)
@@ -70,7 +129,9 @@ namespace Aurora.EffectsEngine.Animations
         {
             return _color.Equals(p._color) &&
                 _dimension.Equals(p._dimension) &&
-                _width.Equals(p._width);
+                _width.Equals(p._width) &&
+                _duration.Equals(p._duration) &&
+                _angle.Equals(p._angle);
         }
 
         public override int GetHashCode()
@@ -81,13 +142,15 @@ namespace Aurora.EffectsEngine.Animations
                 hash = hash * 23 + _color.GetHashCode();
                 hash = hash * 23 + _dimension.GetHashCode();
                 hash = hash * 23 + _width.GetHashCode();
+                hash = hash * 23 + _duration.GetHashCode();
+                hash = hash * 23 + _angle.GetHashCode();
                 return hash;
             }
         }
 
         public override string ToString()
         {
-            return "AnimationCircle [ Color: " + _color.ToString() + " Dimensions: " + _dimension.ToString() + " Width: " + _width + "]";
+            return $"AnimationCircle [ Color: {_color.ToString()} Dimensions: {_dimension.ToString()} Width: {_width} Duration: {_duration} Angle: {_angle} ]";
         }
     }
 }
