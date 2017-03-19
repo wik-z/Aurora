@@ -518,18 +518,14 @@ namespace Aurora
 
         private void Profile_grid_MouseLeave(object sender, MouseEventArgs e)
         {
-            if (sender != null && sender is Grid && (sender as Grid).Tag != null && (sender as Grid).Tag is Image)
-            {
+            if ((sender as Grid)?.Tag is Image)
                 ((sender as Grid).Tag as Image).Visibility = Visibility.Hidden;
-            }
         }
 
         private void Profile_grid_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (sender != null && sender is Grid && (sender as Grid).Tag != null && (sender as Grid).Tag is Image)
-            {
+            if ((sender as Grid)?.Tag is Image)
                 ((sender as Grid).Tag as Image).Visibility = Visibility.Visible;
-            }
         }
 
         private void TransitionToProfile(Image source)
@@ -683,7 +679,7 @@ namespace Aurora
                 DrawingGroup drawingGroup = new DrawingGroup();
                 drawingGroup.Children.Add(visible_region);
 
-                Point relativePoint = selected_item.TransformToAncestor(profiles_background)
+                /*Point relativePoint = selected_item.TransformToAncestor(profiles_background)
                               .Transform(new Point(0, 0));
 
                 double x = 0.0D;
@@ -691,7 +687,7 @@ namespace Aurora
                 double width = profiles_background.ActualWidth;
                 double height = selected_item.ActualHeight + 4.0D;
 
-                /*if (item.Parent != null && item.Parent.Equals(profiles_stack))
+                if (item.Parent != null && item.Parent.Equals(profiles_stack))
                 {
                     Point relativePointWithinStack = profiles_stack.TransformToAncestor(profiles_background)
                               .Transform(new Point(0, 0));
@@ -706,7 +702,7 @@ namespace Aurora
 
                 }
                 else
-                {*/
+                {
                 x = 0.0D;
                 y = relativePoint.Y - 2.0D;
                 width = profiles_background.ActualWidth;
@@ -715,7 +711,7 @@ namespace Aurora
                 if (y + height > profiles_background.ActualHeight - 40)
                     height -= (y + height) - (profiles_background.ActualHeight - 40);
                 //}
-
+                */
 
                 GeometryDrawing transparent_region =
                     new GeometryDrawing(

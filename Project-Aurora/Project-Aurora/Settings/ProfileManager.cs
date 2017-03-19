@@ -140,7 +140,7 @@ namespace Aurora.Settings
 
         public virtual ImageSource GetIcon()
         {
-            return icon ?? (icon = new BitmapImage(new Uri("/Aurora;component/"+Config.IconURI, UriKind.Relative)));
+            return icon ?? (icon = new BitmapImage(new Uri(Config.IconURI, UriKind.Relative)));
         }
 
         public void SwitchToProfile(ProfileSettings newProfileSettings)
@@ -238,10 +238,15 @@ namespace Aurora.Settings
                         if (String.IsNullOrWhiteSpace(prof.ProfileName))
                             prof.ProfileName = Path.GetFileNameWithoutExtension(path);
 
-                        foreach (Layers.Layer lyr in prof.Layers)
+                        foreach (Layers.Layer lyr in prof.Layers.ToList())
                         {
-                            lyr.AnythingChanged += this.SaveProfilesEvent;
-                            lyr.SetProfile(this);
+                            if (!Global.ProfilesManager.LayerHandlers.ContainsKey(lyr.Handler.ID))
+                                prof.Layers.Remove(lyr);
+                            else
+                            {
+                                lyr.AnythingChanged += this.SaveProfilesEvent;
+                                lyr.SetProfile(this);
+                            }
                         }
 
                         prof.Layers.CollectionChanged += (s, e) =>
