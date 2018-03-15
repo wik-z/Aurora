@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Aurora.Devices.Layout;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Threading;
@@ -9,7 +10,7 @@ namespace Aurora.Devices
     /// <summary>
     /// Enum definition, representing everysingle supported device key
     /// </summary>
-    public enum DeviceKeys
+    /*public enum DeviceKeys
     {
         /// <summary>
         /// Peripheral Device
@@ -1131,23 +1132,29 @@ namespace Aurora.Devices
         /// </summary>
         [Description("None")]
         NONE = -1,
-    };
+    };*/
 
-    /// <summary>
-    /// Struct representing color settings being sent to devices
-    /// </summary>
-    public class DeviceColorComposition
-    {
-        public readonly object bitmapLock = new object();
-        public Dictionary<DeviceKeys, Color> keyColors;
-        public Bitmap keyBitmap;
-    }
 
     /// <summary>
     /// An interface for a device class.
     /// </summary>
-    public interface Device
+    public interface DeviceIntegration
     {
+        /// <summary>
+        /// Unique identifier for this device
+        /// </summary>
+        short DeviceID { get; }
+
+        /// <summary>
+        /// List of ID's of types of devices supported by this device with how many can be supported at once.
+        /// </summary>
+        Dictionary<byte, byte> SupportedDeviceTypes { get; }
+
+        /// <summary>
+        /// List of DeviceTypes that are currently connected to the integration that should exist in the device layout
+        /// </summary>
+        List<byte> ConnectedDevices { get; }
+
         /// <summary>
         /// Gets registered variables by this device.
         /// </summary>
@@ -1219,19 +1226,11 @@ namespace Aurora.Devices
         bool IsPeripheralConnected();
 
         /// <summary>
-        /// Updates the device with a specified color arrangement.
-        /// </summary>
-        /// <param name="keyColors">A dictionary of DeviceKeys their corresponding Colors</param>
-        /// <param name="forced">A boolean value indicating whether or not to forcefully update this device</param>
-        /// <returns></returns>
-        bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, CancellationToken token, bool forced = false);
-
-        /// <summary>
         /// Updates the device with a specified color composition.
         /// </summary>
         /// <param name="colorComposition">A struct containing a dictionary of colors as well as the resulting bitmap</param>
         /// <param name="forced">A boolean value indicating whether or not to forcefully update this device</param>
         /// <returns></returns>
-        bool UpdateDevice(DeviceColorComposition colorComposition, CancellationToken token, bool forced = false);
+        bool UpdateDevice(BitmapLock colorComposition, List<DeviceLayout> devices, CancellationToken token, bool forced = false);
     }
 }

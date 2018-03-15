@@ -19,6 +19,7 @@ using SharpDX.RawInput;
 using NLog;
 using System.Reflection;
 using System.Text;
+using Aurora.Devices.Layout;
 
 namespace Aurora
 {
@@ -89,8 +90,7 @@ namespace Aurora
         public static LightingStateManager LightingStateManager;
         public static NetworkListener net_listener;
         public static Configuration Configuration;
-        public static DeviceManager dev_manager;
-        public static KeyboardLayoutManager kbLayout;
+        public static DeviceManager deviceManager;
         public static Effects effengine;
         public static KeyRecorder key_recorder;
 
@@ -232,7 +232,7 @@ namespace Aurora
 
                 Global.StartTime = Utils.Time.GetMillisecondsSinceEpoch();
 
-                Global.dev_manager = new DeviceManager();
+                Global.deviceManager = new DeviceManager();
                 Global.effengine = new Effects();
 
                 //Load config
@@ -274,10 +274,6 @@ namespace Aurora
                 Global.logger.Info("Loading Plugins");
                 (Global.PluginManager = new PluginManager()).Initialize();
 
-                Global.logger.Info("Loading KB Layouts");
-                Global.kbLayout = new KeyboardLayoutManager();
-                Global.kbLayout.LoadBrandDefault();
-
                 Global.logger.Info("Loading Input Hooking");
                 Global.InputEvents = new InputEvents();
                 Global.InputEvents.KeyDown += InputEventsOnKeyDown;
@@ -291,8 +287,8 @@ namespace Aurora
                 (Global.LightingStateManager = new LightingStateManager()).Initialize();
 
                 Global.logger.Info("Loading Device Manager");
-                Global.dev_manager.RegisterVariables();
-                Global.dev_manager.Initialize();
+                Global.deviceManager.RegisterVariables();
+                Global.deviceManager.Initialize();
 
                 /*Global.logger.LogLine("Starting GameEventHandler", Logging_Level.Info);
                 Global.geh = new GameEventHandler();
@@ -417,8 +413,8 @@ namespace Aurora
             Global.InputEvents?.Dispose();
             Global.LightingStateManager?.Dispose();
             Global.net_listener?.Stop();
-            Global.dev_manager?.Shutdown();
-            Global.dev_manager?.Dispose();
+            Global.deviceManager?.Shutdown();
+            Global.deviceManager?.Dispose();
 
             InputInterceptor?.Dispose();
 

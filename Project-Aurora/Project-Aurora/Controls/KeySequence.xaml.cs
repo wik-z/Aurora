@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Aurora.Devices.Layout;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
@@ -40,7 +41,7 @@ namespace Aurora.Controls
             }
         }
 
-        public List<Devices.DeviceKeys> List
+        public List<DeviceLED> List
         {
             get
             {
@@ -182,7 +183,7 @@ namespace Aurora.Controls
 
                     button.Content = "Assign Keys";
 
-                    Devices.DeviceKeys[] recorded_keys = Global.key_recorder.GetKeys();
+                    DeviceLED[] recorded_keys = Global.key_recorder.GetKeys();
 
                     if (sequence_listbox.SelectedIndex > 0 && sequence_listbox.SelectedIndex < (sequence_listbox.Items.Count - 1))
                     {

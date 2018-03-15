@@ -454,8 +454,6 @@ namespace Aurora.Settings
 
         private FrameworkElement last_selected_element;
 
-        private static double bitmap_one_pixel = 3.0; // 12 pixels = 1 byte
-
         private Dictionary<Devices.DeviceKeys, BitmapRectangle> bitmap_map = new Dictionary<Devices.DeviceKeys, BitmapRectangle>();
 
         private bool _bitmapMapInvalid = true;

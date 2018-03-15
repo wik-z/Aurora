@@ -1,4 +1,5 @@
-﻿using Aurora.EffectsEngine;
+﻿using Aurora.Devices.Layout;
+using Aurora.EffectsEngine;
 using Aurora.EffectsEngine.Animations;
 using Aurora.Settings;
 using System;
@@ -17,9 +18,8 @@ namespace Aurora.Profiles.Desktop
 
         private LayerEffectConfig effect_cfg = new LayerEffectConfig();
 
-        private Devices.DeviceKeys[] allKeys = Enum.GetValues(typeof(Devices.DeviceKeys)).Cast<Devices.DeviceKeys>().ToArray();
-        private Dictionary<Devices.DeviceKeys, float> stars = new Dictionary<Devices.DeviceKeys, float>();
-        private Dictionary<Devices.DeviceKeys, float> raindrops = new Dictionary<Devices.DeviceKeys, float>();
+        private Dictionary<DeviceLED, float> stars = new Dictionary<DeviceLED, float>();
+        private Dictionary<DeviceLED, float> raindrops = new Dictionary<DeviceLED, float>();
         private AnimationMix matrix_lines = new AnimationMix().SetAutoRemove(true); //This will be an infinite Mix
         long nextstarset = 0L;
 
@@ -84,7 +84,7 @@ namespace Aurora.Profiles.Desktop
                     {
                         for (int x = 0; x < Global.Configuration.idle_amount; x++)
                         {
-                            Devices.DeviceKeys star = allKeys[randomizer.Next(allKeys.Length)];
+                            DeviceLED star = Global.deviceManager.AllLEDS[randomizer.Next(Global.deviceManager.AllLEDS.Count)].GetDeviceLED();
                             if (stars.ContainsKey(star))
                                 stars[star] = 1.0f;
                             else
@@ -96,9 +96,9 @@ namespace Aurora.Profiles.Desktop
 
                     layer.Fill(Global.Configuration.idle_effect_secondary_color);
 
-                    Devices.DeviceKeys[] stars_keys = stars.Keys.ToArray();
+                    DeviceLED[] stars_keys = stars.Keys.ToArray();
 
-                    foreach (Devices.DeviceKeys star in stars_keys)
+                    foreach (DeviceLED star in stars_keys)
                     {
                         layer.Set(star, Utils.ColorUtils.MultiplyColorByScalar(Global.Configuration.idle_effect_primary_color, stars[star]));
                         stars[star] -= getDeltaTime() * 0.05f * Global.Configuration.idle_speed;
@@ -113,7 +113,7 @@ namespace Aurora.Profiles.Desktop
                     {
                         for (int x = 0; x < Global.Configuration.idle_amount; x++)
                         {
-                            Devices.DeviceKeys star = allKeys[randomizer.Next(allKeys.Length)];
+                            DeviceLED star = Global.deviceManager.AllLEDS[randomizer.Next(Global.deviceManager.AllLEDS.Count)].GetDeviceLED();
                             if (raindrops.ContainsKey(star))
                                 raindrops[star] = 1.0f;
                             else
@@ -125,16 +125,16 @@ namespace Aurora.Profiles.Desktop
 
                     layer.Fill(Global.Configuration.idle_effect_secondary_color);
 
-                    Devices.DeviceKeys[] raindrops_keys = raindrops.Keys.ToArray();
+                    DeviceLED[] raindrops_keys = raindrops.Keys.ToArray();
 
                     ColorSpectrum drop_spec = new ColorSpectrum(Global.Configuration.idle_effect_primary_color, Color.FromArgb(0, Global.Configuration.idle_effect_primary_color));
 
-                    foreach (Devices.DeviceKeys raindrop in raindrops_keys)
+                    foreach (DeviceLED raindrop in raindrops_keys)
                     {
-                        PointF pt = Effects.GetBitmappingFromDeviceKey(raindrop).Center;
+                        PointF pt = Global.deviceManager.GetBitmappingFromLED(raindrop).Center;
 
                         float transition_value = 1.0f - raindrops[raindrop];
-                        float radius = transition_value * Effects.canvas_biggest;
+                        float radius = transition_value * Global.deviceManager.canvas_biggest;
 
                         layer.GetGraphics().DrawEllipse(new Pen(drop_spec.GetColorAt(transition_value), 2),
                             pt.X - radius,

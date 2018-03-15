@@ -15,6 +15,7 @@ using System.Windows.Controls;
 using Aurora.Utils;
 using Gma.System.MouseKeyHook;
 using SharpDX.RawInput;
+using Aurora.Devices.Layout;
 
 namespace Aurora.Settings.Layers
 {
@@ -26,14 +27,14 @@ namespace Aurora.Settings.Layers
             Spectrum
         };
 
-        public Devices.DeviceKeys key;
+        public KeyboardKeys key;
         public float progress;
         public bool waitOnKeyUp;
         public AnimationMix animation;
         public ColorSpectrum spectrum;
         public readonly input_type type;
 
-        public input_item(Devices.DeviceKeys key, float progress, bool waitOnKeyUp, AnimationMix animation)
+        public input_item(KeyboardKeys key, float progress, bool waitOnKeyUp, AnimationMix animation)
         {
             this.key = key;
             this.progress = progress;
@@ -43,7 +44,7 @@ namespace Aurora.Settings.Layers
             type = input_type.AnimationMix;
         }
 
-        public input_item(Devices.DeviceKeys key, float progress, bool waitOnKeyUp, ColorSpectrum spectrum)
+        public input_item(KeyboardKeys key, float progress, bool waitOnKeyUp, ColorSpectrum spectrum)
         {
             this.key = key;
             this.progress = progress;
@@ -135,8 +136,8 @@ namespace Aurora.Settings.Layers
             if (Utils.Time.GetMillisecondsSinceEpoch() - previoustime > 1000L)
                 return; //This event wasn't used for at least 1 second
 
-            Devices.DeviceKeys deviceKey = e.GetDeviceKey();
-            if (deviceKey != Devices.DeviceKeys.NONE)
+            KeyboardKeys deviceKey = e.GetDeviceKey();
+            if (deviceKey != KeyboardKeys.NONE)
             {
                 foreach (var input in _input_list.ToArray())
                 {
@@ -149,7 +150,7 @@ namespace Aurora.Settings.Layers
                 previous_key = Keys.None;
         }
 
-        private Dictionary<Devices.DeviceKeys, long> TimeOfLastPress = new Dictionary<Devices.DeviceKeys, long>();
+        private Dictionary<KeyboardKeys, long> TimeOfLastPress = new Dictionary<KeyboardKeys, long>();
         private const long pressBuffer = 300L;
 
         private void InputEventsKeyDown(object sender, KeyboardInputEventArgs e)
@@ -162,7 +163,7 @@ namespace Aurora.Settings.Layers
                 return;
 
             long? currentTime = null;
-            Devices.DeviceKeys device_key = e.GetDeviceKey();
+            KeyboardKeys device_key = e.GetDeviceKey();
 
             lock (TimeOfLastPress)
             {
@@ -175,9 +176,9 @@ namespace Aurora.Settings.Layers
                 }
             }
 
-            if (device_key != Devices.DeviceKeys.NONE && !Properties.Sequence.keys.Contains(device_key))
+            if (device_key != KeyboardKeys.NONE && !Properties.Sequence.keys.Contains(device_key.GetDeviceLED()))
             {
-                PointF pt = Effects.GetBitmappingFromDeviceKey(device_key).Center;
+                PointF pt = Global.deviceManager.GetBitmappingFromLED(device_key.GetDeviceLED()).Center;
                 if (pt != new PointF(0, 0))
                 {
                     TimeOfLastPress.Add(device_key, currentTime ?? Utils.Time.GetMillisecondsSinceEpoch());
@@ -188,7 +189,7 @@ namespace Aurora.Settings.Layers
             }
         }
 
-        private input_item CreateInputItem(Devices.DeviceKeys key, PointF origin)
+        private input_item CreateInputItem(KeyboardKeys key, PointF origin)
         {
             Color primary_c = Properties.RandomPrimaryColor ? Utils.ColorUtils.GenerateRandomColor() : Properties.PrimaryColor;
             Color secondary_c = Properties.RandomSecondaryColor ? Utils.ColorUtils.GenerateRandomColor() : Properties.SecondaryColor;
@@ -315,7 +316,7 @@ namespace Aurora.Settings.Layers
 
                         Color color = input.spectrum.GetColorAt(transition_value);
 
-                        interactive_layer.Set(input.key, color);
+                        interactive_layer.Set(input.key.GetDeviceLED(), color);
                     }
                     else if (input.type == input_item.input_type.AnimationMix)
                     {

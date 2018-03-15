@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Aurora.Devices.AtmoOrbDevice
 {
-    public class AtmoOrbDevice : Device
+    public class AtmoOrbDevice : DeviceIntegration
     {
         private string devicename = "AtmoOrb";
         private Socket socket;

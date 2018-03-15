@@ -17,6 +17,7 @@ using System.Runtime.CompilerServices;
 using Newtonsoft.Json.Serialization;
 using System.Collections.ObjectModel;
 using Aurora.Settings;
+using System.ComponentModel;
 
 namespace Aurora.Profiles
 {
@@ -76,7 +77,7 @@ namespace Aurora.Profiles
         public string ID { get { return Config.ID; } }
         public Type GameStateType { get { return Config.GameStateType; } }
         public bool IsEnabled { get { return Settings.IsEnabled; } }
-        public event PropertyChangedExEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
         protected LightEventType type;
         public LightEventType Type
         {

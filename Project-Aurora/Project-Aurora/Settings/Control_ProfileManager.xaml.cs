@@ -766,7 +766,7 @@ namespace Aurora.Settings
 
                                         animTrack.SetFrame(0.0f, new AnimationGradientCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, new EffectsEngine.EffectBrush(transitions).SetBrushType(EffectsEngine.EffectBrush.BrushType.Radial), (int)width));
 
-                                        animTrack.SetFrame(terminalTime, new AnimationGradientCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest, new EffectsEngine.EffectBrush(transitions).SetBrushType(EffectsEngine.EffectBrush.BrushType.Radial), (int)width));
+                                        animTrack.SetFrame(terminalTime, new AnimationGradientCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest, new EffectsEngine.EffectBrush(transitions).SetBrushType(EffectsEngine.EffectBrush.BrushType.Radial), (int)width));
 
                                         FocusedApplication.Profile.Layers.Add(new Layers.Layer()
                                         {

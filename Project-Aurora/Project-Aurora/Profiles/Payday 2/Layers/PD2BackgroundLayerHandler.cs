@@ -206,7 +206,7 @@ namespace Aurora.Profiles.Payday_2.Layers
                         ColorSpectrum suspicion_spec = new ColorSpectrum(Properties.LowSuspicionColor, Properties.HighSuspicionColor);
                         suspicion_spec.SetColorAt(0.5f, Properties.MediumSuspicionColor);
 
-                        Settings.KeySequence suspicionSequence = new Settings.KeySequence(new Settings.FreeFormObject(0, 0, 1.0f / (Effects.editor_to_canvas_width / Effects.canvas_width), 1.0f / (Effects.editor_to_canvas_height / Effects.canvas_height)));
+                        Settings.KeySequence suspicionSequence = new Settings.KeySequence(new Settings.FreeFormObject(0, 0, 1.0f / (Global.deviceManager.editor_to_canvas / Effects.canvas_width), 1.0f / (Global.deviceManager.editor_to_canvas / Effects.canvas_height)));
 
                         bg_layer.PercentEffect(suspicion_spec, suspicionSequence, percentSuspicious, 1.0D, Properties.SuspicionEffectType);
 

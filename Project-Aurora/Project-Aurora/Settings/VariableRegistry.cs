@@ -62,7 +62,7 @@ namespace Aurora.Settings
         }
     }
 
-    public class VariableRegistry //Might want to implement something like IEnumerable here
+    public class VariableRegistry : NotifyPropertyChangedEx //Might want to implement something like IEnumerable here
     {
         [JsonProperty("Variables")]
         private Dictionary<string, VariableRegistryItem> _variables;
@@ -73,6 +73,14 @@ namespace Aurora.Settings
         public VariableRegistry()
         {
             _variables = new Dictionary<string, VariableRegistryItem>();
+        }
+
+        public VariableRegistry(params ValueTuple<string, VariableRegistryItem>[] items) : this()
+        {
+            foreach (var item in items)
+            {
+                this.Register(item.Item1, item.Item2);
+            }
         }
 
         public void Combine(VariableRegistry otherRegistry, bool removeMissing = false)
@@ -124,7 +132,9 @@ namespace Aurora.Settings
         {
             if (_variables.ContainsKey(name))
             {
+                var old = _variables[name].Value;
                 _variables[name].SetVariable(variable);
+                InvokePropertyChanged(old, variable, name);
                 return true;
             }
 

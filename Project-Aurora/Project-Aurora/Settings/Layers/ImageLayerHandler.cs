@@ -84,10 +84,10 @@ namespace Aurora.Settings.Layers
                 }
                 else
                 {
-                    float x_pos = (float)Math.Round((Properties.Sequence.freeform.X + Effects.grid_baseline_x) * Effects.editor_to_canvas_width);
-                    float y_pos = (float)Math.Round((Properties.Sequence.freeform.Y + Effects.grid_baseline_y) * Effects.editor_to_canvas_height);
-                    float width = (float)Math.Round((double)(Properties.Sequence.freeform.Width * Effects.editor_to_canvas_width));
-                    float height = (float)Math.Round((double)(Properties.Sequence.freeform.Height * Effects.editor_to_canvas_height));
+                    float x_pos = (float)Math.Round((Properties.Sequence.freeform.X + Effects.grid_baseline_x) * Global.deviceManager.editor_to_canvas);
+                    float y_pos = (float)Math.Round((Properties.Sequence.freeform.Y + Effects.grid_baseline_y) * Global.deviceManager.editor_to_canvas);
+                    float width = (float)Math.Round((double)(Properties.Sequence.freeform.Width * Global.deviceManager.editor_to_canvas));
+                    float height = (float)Math.Round((double)(Properties.Sequence.freeform.Height * Global.deviceManager.editor_to_canvas));
 
                     if (width < 3) width = 3;
                     if (height < 3) height = 3;

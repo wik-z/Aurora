@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Aurora.Devices;
 
 namespace Aurora.Settings
 {
@@ -44,7 +45,7 @@ namespace Aurora.Settings
             GenerateRandomColor();
         }
 
-        public ColorZone(Devices.DeviceKeys[] zone_keys, string zone_name = "New Zone")
+        public ColorZone(DeviceKeys[] zone_keys, string zone_name = "New Zone")
         {
             name = zone_name;
             keysequence = new KeySequence(zone_keys);
@@ -54,7 +55,7 @@ namespace Aurora.Settings
             GenerateRandomColor();
         }
 
-        public ColorZone(Devices.DeviceKeys[] zone_keys, LayerEffects zone_effect, string zone_name = "New Zone")
+        public ColorZone(DeviceKeys[] zone_keys, LayerEffects zone_effect, string zone_name = "New Zone")
         {
             name = zone_name;
             keysequence = new KeySequence(zone_keys);
@@ -64,7 +65,7 @@ namespace Aurora.Settings
             GenerateRandomColor();
         }
 
-        public ColorZone(Devices.DeviceKeys[] zone_keys, Color zone_color, string zone_name = "New Zone")
+        public ColorZone(DeviceKeys[] zone_keys, Color zone_color, string zone_name = "New Zone")
         {
             name = zone_name;
             keysequence = new KeySequence(zone_keys);

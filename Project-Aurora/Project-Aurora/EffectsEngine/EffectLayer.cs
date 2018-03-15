@@ -1,4 +1,5 @@
-﻿using Aurora.Settings;
+﻿using Aurora.Devices.Layout;
+using Aurora.Settings;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -23,12 +24,12 @@ namespace Aurora.EffectsEngine
 
         Color peripheral;
 
-        private static Devices.DeviceKeys[] possible_peripheral_keys = {
+        /*private static Devices.DeviceKeys[] possible_peripheral_keys = {
                 Devices.DeviceKeys.Peripheral,
                 Devices.DeviceKeys.Peripheral_FrontLight,
                 Devices.DeviceKeys.Peripheral_ScrollWheel,
                 Devices.DeviceKeys.Peripheral_Logo
-            };
+            };*/
 
         static private ColorSpectrum rainbow = new ColorSpectrum(ColorSpectrum.RainbowLoop);
 
@@ -112,7 +113,7 @@ namespace Aurora.EffectsEngine
                     break;
                 case LayerEffects.RainbowShift_Horizontal:
                     effect_config.shift_amount += ((Utils.Time.GetMillisecondsSinceEpoch() - effect_config.last_effect_call) / 1000.0f) * 5.0f * effect_config.speed;
-                    effect_config.shift_amount = effect_config.shift_amount % Effects.canvas_biggest;
+                    effect_config.shift_amount = effect_config.shift_amount % Global.deviceManager.canvas_biggest;
 
                     if (effect_config.animation_type == AnimationType.Translate_XY)
                         shift = effect_config.shift_amount;
@@ -130,7 +131,7 @@ namespace Aurora.EffectsEngine
                     break;
                 case LayerEffects.RainbowShift_Vertical:
                     effect_config.shift_amount += ((Utils.Time.GetMillisecondsSinceEpoch() - effect_config.last_effect_call) / 1000.0f) * 5.0f * effect_config.speed;
-                    effect_config.shift_amount = effect_config.shift_amount % Effects.canvas_biggest;
+                    effect_config.shift_amount = effect_config.shift_amount % Global.deviceManager.canvas_biggest;
 
                     if (effect_config.animation_type == AnimationType.Translate_XY)
                         shift = effect_config.shift_amount;
@@ -148,7 +149,7 @@ namespace Aurora.EffectsEngine
                     break;
                 case LayerEffects.RainbowShift_Diagonal:
                     effect_config.shift_amount += ((Utils.Time.GetMillisecondsSinceEpoch() - effect_config.last_effect_call) / 1000.0f) * 5.0f * effect_config.speed;
-                    effect_config.shift_amount = effect_config.shift_amount % Effects.canvas_biggest;
+                    effect_config.shift_amount = effect_config.shift_amount % Global.deviceManager.canvas_biggest;
 
                     if (effect_config.animation_type == AnimationType.Translate_XY)
                         shift = effect_config.shift_amount;
@@ -166,7 +167,7 @@ namespace Aurora.EffectsEngine
                     break;
                 case LayerEffects.RainbowShift_Diagonal_Other:
                     effect_config.shift_amount += ((Utils.Time.GetMillisecondsSinceEpoch() - effect_config.last_effect_call) / 1000.0f) * 5.0f * effect_config.speed;
-                    effect_config.shift_amount = effect_config.shift_amount % Effects.canvas_biggest;
+                    effect_config.shift_amount = effect_config.shift_amount % Global.deviceManager.canvas_biggest;
 
                     if (effect_config.animation_type == AnimationType.Translate_XY)
                         shift = effect_config.shift_amount;
@@ -184,7 +185,7 @@ namespace Aurora.EffectsEngine
                     break;
                 case LayerEffects.RainbowShift_Custom_Angle:
                     effect_config.shift_amount += ((Utils.Time.GetMillisecondsSinceEpoch() - effect_config.last_effect_call) / 1000.0f) * 5.0f * effect_config.speed;
-                    effect_config.shift_amount = effect_config.shift_amount % Effects.canvas_biggest;
+                    effect_config.shift_amount = effect_config.shift_amount % Global.deviceManager.canvas_biggest;
 
 
                     if (effect_config.animation_type == AnimationType.Translate_XY)
@@ -203,14 +204,14 @@ namespace Aurora.EffectsEngine
                     break;
                 case LayerEffects.GradientShift_Custom_Angle:
                     effect_config.shift_amount += ((Utils.Time.GetMillisecondsSinceEpoch() - effect_config.last_effect_call) / 1000.0f) * 0.067f * effect_config.speed;
-                    effect_config.shift_amount = effect_config.shift_amount % Effects.canvas_biggest;
+                    effect_config.shift_amount = effect_config.shift_amount % Global.deviceManager.canvas_biggest;
 
                     if (effect_config.animation_type == AnimationType.Translate_XY)
                         shift = effect_config.shift_amount;
                     else if (effect_config.animation_type == AnimationType.Zoom_in && effect_config.brush.type == EffectBrush.BrushType.Radial)
-                        shift = ((Effects.canvas_biggest - effect_config.shift_amount) * 40.0f) % Effects.canvas_biggest;
+                        shift = ((Global.deviceManager.canvas_biggest - effect_config.shift_amount) * 40.0f) % Global.deviceManager.canvas_biggest;
                     else if (effect_config.animation_type == AnimationType.Zoom_out && effect_config.brush.type == EffectBrush.BrushType.Radial)
-                        shift = (effect_config.shift_amount * 40.0f) % Effects.canvas_biggest;
+                        shift = (effect_config.shift_amount * 40.0f) % Global.deviceManager.canvas_biggest;
 
                     if (effect_config.animation_reverse)
                         shift *= -1.0f;
@@ -235,7 +236,7 @@ namespace Aurora.EffectsEngine
                     {
                         if (effect_config.animation_type == AnimationType.Zoom_in || effect_config.animation_type == AnimationType.Zoom_out)
                         {
-                            float percent = shift / Effects.canvas_biggest;
+                            float percent = shift / Global.deviceManager.canvas_biggest;
 
                             float x_offset = (Effects.canvas_width / 2.0f) * percent;
                             float y_offset = (Effects.canvas_height / 2.0f) * percent;
@@ -298,7 +299,7 @@ namespace Aurora.EffectsEngine
             LinearGradientBrush the_brush =
                         new LinearGradientBrush(
                             new Point(0, 0),
-                            new Point(Effects.canvas_biggest, 0),
+                            new Point((int)Global.deviceManager.canvas_biggest, 0),
                             Color.Red, Color.Red);
             Color[] colors = new Color[]
             {
@@ -414,7 +415,7 @@ namespace Aurora.EffectsEngine
         /// <param name="key">DeviceKey to be set</param>
         /// <param name="color">Color to be used</param>
         /// <returns>Itself</returns>
-        public EffectLayer Set(Devices.DeviceKeys key, Color color)
+        public EffectLayer Set(DeviceLED key, Color color)
         {
             SetOneKey(key, color);
 
@@ -427,7 +428,7 @@ namespace Aurora.EffectsEngine
         /// <param name="keys">Array of DeviceKeys to be set</param>
         /// <param name="color">Color to be used</param>
         /// <returns>Itself</returns>
-        public EffectLayer Set(Devices.DeviceKeys[] keys, Color color)
+        public EffectLayer Set(DeviceLED[] keys, Color color)
         {
             foreach(var key in keys)
                 SetOneKey(key, color);
@@ -452,10 +453,10 @@ namespace Aurora.EffectsEngine
             {
                 using (Graphics g = Graphics.FromImage(colormap))
                 {
-                    float x_pos = (float)Math.Round((sequence.freeform.X + Effects.grid_baseline_x) * Effects.editor_to_canvas_width);
-                    float y_pos = (float)Math.Round((sequence.freeform.Y + Effects.grid_baseline_y) * Effects.editor_to_canvas_height);
-                    float width = (float)(sequence.freeform.Width * Effects.editor_to_canvas_width);
-                    float height = (float)(sequence.freeform.Height * Effects.editor_to_canvas_height);
+                    float x_pos = (float)Math.Round((sequence.freeform.X + Effects.grid_baseline_x) * Global.deviceManager.editor_to_canvas);
+                    float y_pos = (float)Math.Round((sequence.freeform.Y + Effects.grid_baseline_y) * Global.deviceManager.editor_to_canvas);
+                    float width = (float)(sequence.freeform.Width * Global.deviceManager.editor_to_canvas);
+                    float height = (float)(sequence.freeform.Height * Global.deviceManager.editor_to_canvas);
 
                     if (width < 3) width = 3;
                     if (height < 3) height = 3;
@@ -481,18 +482,18 @@ namespace Aurora.EffectsEngine
         /// <param name="key">DeviceKey to be set</param>
         /// <param name="color">Color to be used</param>
         /// <returns>Itself</returns>
-        private EffectLayer SetOneKey(Devices.DeviceKeys key, Color color)
+        private EffectLayer SetOneKey(DeviceLED key, Color color)
         {
-            BitmapRectangle keymaping = Effects.GetBitmappingFromDeviceKey(key);
+            BitmapRectangle keymaping = Global.deviceManager.GetBitmappingFromLED(key);
 
-            if (key == Devices.DeviceKeys.Peripheral)
+            /*if (key.LedID == (short)Devices.DeviceKeys.Peripheral)
             {
                 peripheral = color;
                 using (Graphics g = Graphics.FromImage(colormap))
                 {
                     foreach (Devices.DeviceKeys peri_key in possible_peripheral_keys)
                     {
-                        BitmapRectangle peri_keymaping = Effects.GetBitmappingFromDeviceKey(peri_key);
+                        BitmapRectangle peri_keymaping = Global.deviceManager.GetBitmappingFromLED(peri_key);
 
                         if (peri_keymaping.IsValid)
                             g.FillRectangle(new SolidBrush(color), peri_keymaping.Rectangle);
@@ -502,7 +503,7 @@ namespace Aurora.EffectsEngine
                 }
             }
             else
-            {
+            {*/
                 if (keymaping.Top < 0 || keymaping.Bottom > Effects.canvas_height ||
                     keymaping.Left < 0 || keymaping.Right > Effects.canvas_width)
                 {
@@ -517,7 +518,7 @@ namespace Aurora.EffectsEngine
                         needsRender = true;
                     }
                 }
-            }
+            //}
 
             return this;
         }
@@ -561,23 +562,40 @@ namespace Aurora.EffectsEngine
         /// </summary>
         /// <param name="key">Key</param>
         /// <returns>Color of the Key</returns>
-        public Color Get(Devices.DeviceKeys key)
+        public Color Get(DeviceLED key)
         {
             try
             {
-                BitmapRectangle keymaping = Effects.GetBitmappingFromDeviceKey(key);
+                BitmapRectangle keymaping = Global.deviceManager.GetBitmappingFromLED(key);
 
-                if (keymaping.IsEmpty && key == Devices.DeviceKeys.Peripheral)
+                /*if (keymaping.IsEmpty && key == Devices.DeviceKeys.Peripheral)
                 {
                     return peripheral;
                 }
                 else
-                {
+                {*/
                     if (keymaping.IsEmpty)
                         return Color.FromArgb(0, 0, 0);
 
                     return Utils.BitmapUtils.GetRegionColor(colormap, keymaping.Rectangle);
-                }
+                //}
+            }
+            catch (Exception exc)
+            {
+                Global.logger.Error("EffectLayer.Get() Exception: " + exc);
+
+                return Color.FromArgb(0, 0, 0);
+            }
+        }
+
+        public Color Get(BitmapRectangle keymaping)
+        {
+            try
+            {
+                if (keymaping.IsEmpty)
+                    return Color.FromArgb(0, 0, 0);
+
+                return Utils.BitmapUtils.GetRegionColor(colormap, keymaping.Rectangle);
             }
             catch (Exception exc)
             {
@@ -719,7 +737,7 @@ namespace Aurora.EffectsEngine
         /// <param name="total">The maxiumum progress value</param>
         /// <param name="percentEffectType">The percent effect type</param>
         /// <returns>Itself</returns>
-        public EffectLayer PercentEffect(Color foregroundColor, Color backgroundColor, Devices.DeviceKeys[] keys, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false)
+        public EffectLayer PercentEffect(Color foregroundColor, Color backgroundColor, DeviceLED[] keys, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false)
         {
             double progress_total = value / total;
             if (progress_total < 0.0)
@@ -739,7 +757,7 @@ namespace Aurora.EffectsEngine
 
             for (int i = 0; i < keys.Count(); i++)
             {
-                Devices.DeviceKeys current_key = keys[i];
+                DeviceLED current_key = keys[i];
 
                 switch (percentEffectType)
                 {
@@ -778,7 +796,7 @@ namespace Aurora.EffectsEngine
         /// <param name="total">The maxiumum progress value</param>
         /// <param name="percentEffectType">The percent effect type</param>
         /// <returns>Itself</returns>
-        public EffectLayer PercentEffect(ColorSpectrum spectrum, Devices.DeviceKeys[] keys, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false)
+        public EffectLayer PercentEffect(ColorSpectrum spectrum, DeviceLED[] keys, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false)
         {
             double progress_total = value / total;
             if (progress_total < 0.0)
@@ -800,7 +818,7 @@ namespace Aurora.EffectsEngine
 
             for (int i = 0; i < keys.Count(); i++)
             {
-                Devices.DeviceKeys current_key = keys[i];
+                DeviceLED current_key = keys[i];
 
                 switch (percentEffectType)
                 {
@@ -856,10 +874,10 @@ namespace Aurora.EffectsEngine
 
             using (Graphics g = Graphics.FromImage(colormap))
             {
-                float x_pos = (float)Math.Round((freeform.X + Effects.grid_baseline_x) * Effects.editor_to_canvas_width);
-                float y_pos = (float)Math.Round((freeform.Y + Effects.grid_baseline_y) * Effects.editor_to_canvas_height);
-                float width = (float)(freeform.Width * Effects.editor_to_canvas_width);
-                float height = (float)(freeform.Height * Effects.editor_to_canvas_height);
+                float x_pos = (float)Math.Round((freeform.X + Effects.grid_baseline_x) * Global.deviceManager.editor_to_canvas);
+                float y_pos = (float)Math.Round((freeform.Y + Effects.grid_baseline_y) * Global.deviceManager.editor_to_canvas);
+                float width = (float)(freeform.Width * Global.deviceManager.editor_to_canvas);
+                float height = (float)(freeform.Height * Global.deviceManager.editor_to_canvas);
 
                 if (width < 3) width = 3;
                 if (height < 3) height = 3;
@@ -929,10 +947,10 @@ namespace Aurora.EffectsEngine
 
             using (Graphics g = Graphics.FromImage(colormap))
             {
-                float x_pos = (float)Math.Round((freeform.X + Effects.grid_baseline_x) * Effects.editor_to_canvas_width);
-                float y_pos = (float)Math.Round((freeform.Y + Effects.grid_baseline_y) * Effects.editor_to_canvas_height);
-                float width = (float)(freeform.Width * Effects.editor_to_canvas_width);
-                float height = (float)(freeform.Height * Effects.editor_to_canvas_height);
+                float x_pos = (float)Math.Round((freeform.X + Effects.grid_baseline_x) * Global.deviceManager.editor_to_canvas);
+                float y_pos = (float)Math.Round((freeform.Y + Effects.grid_baseline_y) * Global.deviceManager.editor_to_canvas);
+                float width = (float)(freeform.Width * Global.deviceManager.editor_to_canvas);
+                float height = (float)(freeform.Height * Global.deviceManager.editor_to_canvas);
 
                 if (width < 3) width = 3;
                 if (height < 3) height = 3;
@@ -980,10 +998,10 @@ namespace Aurora.EffectsEngine
         {
             using (Graphics g = Graphics.FromImage(colormap))
             {
-                float x_pos = (float)Math.Round((freeform.X + Effects.grid_baseline_x) * Effects.editor_to_canvas_width);
-                float y_pos = (float)Math.Round((freeform.Y + Effects.grid_baseline_y) * Effects.editor_to_canvas_height);
-                float width = (float)Math.Round(freeform.Width * Effects.editor_to_canvas_width);
-                float height = (float)Math.Round(freeform.Height * Effects.editor_to_canvas_height);
+                float x_pos = (float)Math.Round((freeform.X + Effects.grid_baseline_x) * Global.deviceManager.editor_to_canvas);
+                float y_pos = (float)Math.Round((freeform.Y + Effects.grid_baseline_y) * Global.deviceManager.editor_to_canvas);
+                float width = (float)Math.Round(freeform.Width * Global.deviceManager.editor_to_canvas);
+                float height = (float)Math.Round(freeform.Height * Global.deviceManager.editor_to_canvas);
 
                 if (width < 3) width = 3;
                 if (height < 3) height = 3;
@@ -1007,7 +1025,7 @@ namespace Aurora.EffectsEngine
         /// </summary>
         /// <param name="colorzones">An array of ColorZones</param>
         /// <returns>Itself</returns>
-        public EffectLayer DrawColorZones(ColorZone[] colorzones)
+        /*public EffectLayer DrawColorZones(ColorZone[] colorzones)
         {
             foreach (ColorZone cz in colorzones.Reverse())
             {
@@ -1034,10 +1052,10 @@ namespace Aurora.EffectsEngine
                     }
                     else
                     {
-                        float x_pos = (float)Math.Round((cz.keysequence.freeform.X + Effects.grid_baseline_x) * Effects.editor_to_canvas_width);
-                        float y_pos = (float)Math.Round((cz.keysequence.freeform.Y + Effects.grid_baseline_y) * Effects.editor_to_canvas_height);
-                        float width = (float)Math.Round((double)(cz.keysequence.freeform.Width * Effects.editor_to_canvas_width));
-                        float height = (float)Math.Round((double)(cz.keysequence.freeform.Height * Effects.editor_to_canvas_height));
+                        float x_pos = (float)Math.Round((cz.keysequence.freeform.X + Effects.grid_baseline_x) * Global.deviceManager.editor_to_canvas);
+                        float y_pos = (float)Math.Round((cz.keysequence.freeform.Y + Effects.grid_baseline_y) * Global.deviceManager.editor_to_canvas);
+                        float width = (float)Math.Round((double)(cz.keysequence.freeform.Width * Global.deviceManager.editor_to_canvas));
+                        float height = (float)Math.Round((double)(cz.keysequence.freeform.Height * Global.deviceManager.editor_to_canvas));
 
                         if (width < 3) width = 3;
                         if (height < 3) height = 3;
@@ -1063,7 +1081,7 @@ namespace Aurora.EffectsEngine
             }
 
             return this;
-        }
+        }*/
 
         /// <summary>
         /// Excludes provided sequence from the layer (Applies a mask)

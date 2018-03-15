@@ -21,6 +21,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Globalization;
 using Aurora.Profiles.Aurora_Wrapper;
+using System.ComponentModel;
 
 namespace Aurora.Profiles
 {
@@ -265,13 +266,15 @@ namespace Aurora.Profiles
             return true;   
         }
 
-        private void LightEvent_PropertyChanged(object sender, PropertyChangedExEventArgs e)
+        private void LightEvent_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            PropertyChangedExEventArgs ex = (PropertyChangedExEventArgs)e;
+
             ILightEvent lightEvent = (ILightEvent)sender;
             if (e.PropertyName.Equals(nameof(LightEventConfig.Type)))
             {
-                LightEventType old = (LightEventType)e.OldValue;
-                LightEventType newVal = (LightEventType)e.NewValue;
+                LightEventType old = (LightEventType)ex.OldValue;
+                LightEventType newVal = (LightEventType)ex.NewValue;
 
                 if (!old.Equals(newVal))
                 {
@@ -554,12 +557,12 @@ namespace Aurora.Profiles
 
             if ((profile is Desktop.Desktop && !profile.IsEnabled && Global.Configuration.ShowDefaultLightingOnDisabled) || Global.Configuration.excluded_programs.Contains(raw_process_name))
             {
-                Global.dev_manager.Shutdown();
+                Global.deviceManager.Shutdown();
                 Global.effengine.PushFrame(newFrame);
                 return;
             }
             else
-                Global.dev_manager.InitializeOnce();
+                Global.deviceManager.InitializeOnce();
 
 
             if (Global.Configuration.OverlaysInPreview || !preview)

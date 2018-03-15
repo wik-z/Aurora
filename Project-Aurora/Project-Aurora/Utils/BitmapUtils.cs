@@ -10,7 +10,7 @@ namespace Aurora.Utils
 {
     public static class BitmapUtils
     {
-        public static Color GetRegionColor(Bitmap map, BitmapRectangle rectangle)
+        public static Color GetRegionColor(this Bitmap map, BitmapRectangle rectangle)
         {
             try
             {
@@ -59,7 +59,7 @@ namespace Aurora.Utils
             }
         }
 
-        public static Color GetRegionColor(Bitmap map, Rectangle rectangle)
+        public static Color GetRegionColor(this Bitmap map, Rectangle rectangle)
         {
             return GetRegionColor(map, new BitmapRectangle(rectangle));
         }

@@ -1,4 +1,6 @@
-﻿using Aurora.Profiles;
+﻿using Aurora.Devices.Layout;
+using Aurora.Profiles;
+using Aurora.Settings;
 using CSScriptLibrary;
 using System;
 using System.Collections.Generic;
@@ -7,22 +9,31 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Threading;
+using System.Windows.Controls;
+using System.Linq;
+using LEDINT = System.Int16;
+using Aurora.Utils;
+using System.Collections.ObjectModel;
+using System.Windows.Data;
 
 namespace Aurora.Devices
 {
     public class DeviceContainer
     {
-        public Device Device { get; set; }
+        //List of devices that the integration updates from
+        public List<DeviceLayout> Devices { get; set; }
+
+        public DeviceIntegration Device { get; set; }
 
         public BackgroundWorker Worker = new BackgroundWorker();
         public Thread UpdateThread { get; set; } = null;
 
         public CancellationTokenSource UpdateTaskCancellationTokenSource { get; set; } = null;
 
-        private Tuple<DeviceColorComposition, bool> currentComp = null;
+        private Tuple<BitmapLock, List<DeviceLayout>, bool> currentComp = null;
         private bool newFrame = false;
 
-        public DeviceContainer(Device device)
+        public DeviceContainer(DeviceIntegration device)
         {
             this.Device = device;
             Worker.DoWork += WorkerOnDoWork;
@@ -38,27 +49,27 @@ namespace Aurora.Devices
         {
             newFrame = false;
             UpdateTaskCancellationTokenSource = new CancellationTokenSource();
-            Device.UpdateDevice(currentComp.Item1, UpdateTaskCancellationTokenSource.Token,
-                currentComp.Item2);
+            Device.UpdateDevice(currentComp.Item1, currentComp.Item2, UpdateTaskCancellationTokenSource.Token,
+                currentComp.Item3);
         }
 
-        public void UpdateDevice(DeviceColorComposition composition, bool forced = false)
+        public void UpdateDevice(BitmapLock composition, bool forced = false)
         {
             UpdateTaskCancellationTokenSource?.Cancel();
 
             newFrame = true;
-            currentComp = new Tuple<DeviceColorComposition, bool>(composition, forced);
+            currentComp = new Tuple<BitmapLock, List<DeviceLayout>, bool>(composition, Devices, forced);
 
             if (!Worker.IsBusy)
                 Worker.RunWorkerAsync();
         }
     }
 
-    public class DeviceManager : IDisposable
+    public class DeviceManager : ObjectSettings<DeviceLayoutSettings>, IInit, IDisposable
     {
-        private List<DeviceContainer> devices = new List<DeviceContainer>();
+        private Dictionary<short, DeviceContainer> devices = new Dictionary<short, DeviceContainer>();
 
-        public DeviceContainer[] Devices { get { return devices.ToArray(); } }
+        public Dictionary<short, DeviceContainer> Devices { get { return devices; } }
 
         private bool anyInitialized = false;
         private bool retryActivated = false;
@@ -76,19 +87,55 @@ namespace Aurora.Devices
                 return retryAttemptsLeft;
             }
         }
+
         public event EventHandler NewDevicesInitialized;
+
+        //TODO: Gotta make this be updated anytime the style changes for the DeviceLayout or a new device is added
+        public List<DynamicDeviceLED> AllLEDS { get; private set; }
+
+        private Grid _virtualLayout = new Grid();
+
+        public Grid VirtualLayout
+        {
+            get {
+                return _virtualLayout;
+            }
+        }
+
+        public float canvas_width { get { return LayoutUtils.PixelToByte(this._virtualLayout.Width); } }
+
+        public float canvas_height { get { return LayoutUtils.PixelToByte(this._virtualLayout.Height); } }
+        
+        public float canvas_width_center { get { return canvas_width / 2.0f; } }
+
+        public float canvas_height_center { get { return canvas_height / 2.0f; } }
+
+        public float editor_to_canvas { get { return 1f/(float)Global.Configuration.BitmapAccuracy; } }
+
+        public float canvas_biggest { get { return canvas_width > canvas_height ? canvas_width : canvas_height; } }
 
         public DeviceManager()
         {
-            devices.Add(new DeviceContainer(new Devices.Logitech.LogitechDevice()));         // Logitech Device
-            devices.Add(new DeviceContainer(new Devices.Corsair.CorsairDevice()));           // Corsair Device
-            devices.Add(new DeviceContainer(new Devices.Razer.RazerDevice()));               // Razer Device
-            //devices.Add(new Devices.Roccat.RoccatDevice());             // Roccat Device
-            devices.Add(new DeviceContainer(new Devices.Clevo.ClevoDevice()));               // Clevo Device
-            devices.Add(new DeviceContainer(new Devices.CoolerMaster.CoolerMasterDevice())); // CoolerMaster Device
-            devices.Add(new DeviceContainer(new Devices.AtmoOrbDevice.AtmoOrbDevice()));     // AtmoOrb Ambilight Device
-            devices.Add(new DeviceContainer(new Devices.SteelSeries.SteelSeriesDevice()));   // SteelSeries Device
 
+        }
+
+        public bool Initialized { get; private set; }
+
+        public bool Initialize()
+        {
+            if (Initialized)
+                return true;
+
+            #region Add Integrations
+            AddDevice(new Devices.Logitech.LogitechDevice());         // Logitech Device
+            AddDevice(new Devices.Corsair.CorsairDevice());           // Corsair Device
+            AddDevice(new Devices.Razer.RazerDevice());               // Razer Device
+            //devices.Add(new Devices.Roccat.RoccatDevice());             // Roccat Device
+            AddDevice(new Devices.Clevo.ClevoDevice());               // Clevo Device
+            AddDevice(new Devices.CoolerMaster.CoolerMasterDevice()); // CoolerMaster Device
+            AddDevice(new Devices.AtmoOrbDevice.AtmoOrbDevice());     // AtmoOrb Ambilight Device
+            AddDevice(new Devices.SteelSeries.SteelSeriesDevice());   // SteelSeries Device
+            AddDevice(new Devices.OpenPixel.OpenPixelDevice());       // OpenPixel Device
 
             string devices_scripts_path = System.IO.Path.Combine(Global.ExecutingDirectory, "Scripts", "Devices");
 
@@ -108,9 +155,9 @@ namespace Aurora.Devices
                                 {
                                     dynamic script = Global.PythonEngine.Operations.CreateInstance(main_type);
 
-                                    Device scripted_device = new Devices.ScriptedDevice.ScriptedDevice(script);
+                                    DeviceIntegration scripted_device = new Devices.ScriptedDevice.ScriptedDevice(script);
 
-                                    devices.Add(new DeviceContainer(scripted_device));
+                                    AddDevice(scripted_device);
                                 }
                                 else
                                     Global.logger.Error("Script \"{0}\" does not contain a public 'main' class", device_script);
@@ -122,9 +169,9 @@ namespace Aurora.Devices
                                 {
                                     dynamic script = Activator.CreateInstance(typ);
 
-                                    Device scripted_device = new Devices.ScriptedDevice.ScriptedDevice(script);
+                                    DeviceIntegration scripted_device = new Devices.ScriptedDevice.ScriptedDevice(script);
 
-                                    devices.Add(new DeviceContainer(scripted_device));
+                                    AddDevice(scripted_device);
                                 }
 
                                 break;
@@ -139,29 +186,163 @@ namespace Aurora.Devices
                     }
                 }
             }
+            #endregion
+
+            LoadSettings();
+
+            InitDevices();
+
+            Dictionary<byte, List<DeviceLayout>> allDevices = new Dictionary<byte, List<DeviceLayout>>();
+
+            //Take out all the ones that specifically target an integration and give us all the ones that should target any
+            foreach (var devType in this.Settings.Devices)
+            {
+                List<DeviceLayout> remaining = new List<DeviceLayout>();
+
+                foreach (DeviceLayout dev in devType.Value)
+                {
+                    dev.PropertyChanged += this.deviceLayoutPropertyChanged;
+
+                    if (dev.SelectedSDK != -1)
+                    {
+                        if (this.devices.ContainsKey(dev.SelectedSDK))
+                        {
+                            this.devices[dev.SelectedSDK].Devices.Add(dev);
+                        }
+                        else
+                        {
+                            //error
+                            Global.logger.LogLine($"[Devices] DeviceLayout has SDK with `{dev.SelectedSDK}` selected, but it doesn't exist!");
+                        }
+                    }
+                    else
+                        remaining.Add(dev);
+
+                    //Add event so that it updates the deviceID when needed
+                    devType.Value.CollectionChanged += dev.Moved;
+
+                    dev.Initialize();
+                    
+                    this._virtualLayout.Children.Add(dev.VirtualLayout);
+
+                    foreach (var led in dev.VirtualGroup.grouped_keys)
+                    {
+                        this.AllLEDS.Add(new DynamicDeviceLED(led.tag, dev));
+                    }
+                }
+
+                if (remaining.Count > 0)
+                    allDevices.Add(devType.Key, remaining);
+            }
+
+            //Add devices that target all that support its type to every integration that supports it
+            foreach (var integration in this.devices)
+            {
+                foreach (byte type in integration.Value.Device.SupportedDeviceTypes)
+                {
+                    if (allDevices.ContainsKey(type))
+                    {
+                        integration.Value.Devices.AddRange(allDevices[type]);
+                    }
+                }
+            }
+
+            Initialized = true;
+            return Initialized;
+        }
+
+        private void deviceLayoutPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName.Equals(nameof(DeviceLayout.SelectedSDK))) {
+                //TODO: reassign the device to the currently selected sdk
+                //need to case PropertyChangedEventArgs to PropertyChangedExEventArgs
+            }
+        }
+
+        public void NewDevice(Type deviceLayoutType)
+        {
+            //TODO: Implement this
+        }
+
+        public BitmapRectangle GetBitmappingFromLED(DeviceLED led)
+        {
+            DeviceLayout device = GetDeviceFromDeviceLED(led);
+            if (device != null)
+            {
+                Point offset = device.Location.ToPixel();
+                BitmapRectangle rec;
+                if (device.VirtualGroup.BitmapMap.TryGetValue(led.LedID, out rec))
+                {
+                    return rec.AddOffset(offset);
+                }
+                else
+                {
+                    //error
+                }
+            }
+
+            return null;
+        }
+
+        public DeviceLayout GetDeviceFromDeviceLED(DeviceLED deviceLED)
+        {
+            ObservableCollection<DeviceLayout> devs;
+            if (this.Settings.Devices.TryGetValue(deviceLED.DeviceTypeID, out devs))
+            {
+                if (deviceLED.DeviceID < devs.Count)
+                {
+                    return devs[deviceLED.DeviceID];
+                }
+                else
+                {
+                    //error
+                }
+            }
+            else
+            {
+                //error
+            }
+
+
+            return null;
+        }        
+
+        public bool AddDevice(DeviceIntegration dev)
+        {
+            if (this.devices.ContainsKey(dev.DeviceID))
+            {
+                //exception
+                Global.logger.LogLine($"[DeviceManager] Device with ID `{dev.DeviceID}` has already been registered!", Logging_Level.Error);
+                return false;
+            }
+
+            this.devices.Add(dev.DeviceID, new DeviceContainer(dev));
+
+            return true;
         }
 
         public void RegisterVariables()
         {
             //Register any variables
             foreach (var device in devices)
-                Global.Configuration.VarRegistry.Combine(device.Device.GetRegisteredVariables());
+                Global.Configuration.VarRegistry.Combine(device.Value.Device.GetRegisteredVariables());
         }
 
-        public void Initialize()
+        public void InitDevices()
         {
             int devicesToRetryNo = 0;
-            foreach (DeviceContainer device in devices)
+            foreach (KeyValuePair<short, DeviceContainer> deviceContainer in devices)
             {
-                if (device.Device.IsInitialized() || Global.Configuration.devices_disabled.Contains(device.Device.GetType()))
+                DeviceIntegration device = deviceContainer.Value.Device;
+                if (device.IsInitialized() || Global.Configuration.devices_disabled.Contains(device.GetType()))
                     continue;
 
-                if (device.Device.Initialize())
+                if (device.Initialize())
                     anyInitialized = true;
                 else
                     devicesToRetryNo++;
 
-                Global.logger.Info("Device, " + device.Device.GetDeviceName() + ", was" + (device.Device.IsInitialized() ? "" : " not") + " initialized");
+                Global.logger.Info("Device, " + device.GetDeviceName() + ", was" + (device.IsInitialized() ? "" : " not") + " initialized");
             }
 
             NewDevicesInitialized?.Invoke(this, new EventArgs());
@@ -184,16 +365,17 @@ namespace Aurora.Devices
                 Global.logger.Info("Retrying Device Initialization");
                 int devicesAttempted = 0;
                 bool _anyInitialized = false;
-                foreach (DeviceContainer device in devices)
+                foreach (KeyValuePair<short, DeviceContainer> deviceContainer in devices)
                 {
-                    if (device.Device.IsInitialized() || Global.Configuration.devices_disabled.Contains(device.Device.GetType()))
+                    DeviceIntegration device = deviceContainer.Value.Device;
+                    if (device.IsInitialized() || Global.Configuration.devices_disabled.Contains(device.GetType()))
                         continue;
 
                     devicesAttempted++;
-                    if (device.Device.Initialize())
+                    if (device.Initialize())
                         _anyInitialized = true;
 
-                    Global.logger.Info("Device, " + device.Device.GetDeviceName() + ", was" + (device.Device.IsInitialized() ? "" : " not") + " initialized");
+                    Global.logger.Info("Device, " + device.GetDeviceName() + ", was" + (device.IsInitialized() ? "" : " not") + " initialized");
                 }
 
                 retryAttemptsLeft--;
@@ -224,15 +406,15 @@ namespace Aurora.Devices
             return anyInitialized;
         }
 
-        public Device[] GetInitializedDevices()
+        public DeviceIntegration[] GetInitializedDevices()
         {
-            List<Device> ret = new List<Device>();
+            List<DeviceIntegration> ret = new List<DeviceIntegration>();
 
-            foreach (DeviceContainer device in devices)
+            foreach (var device in devices)
             {
-                if (device.Device.IsInitialized())
+                if (device.Value.Device.IsInitialized())
                 {
-                    ret.Add(device.Device);
+                    ret.Add(device.Value.Device);
                 }
             }
 
@@ -241,12 +423,12 @@ namespace Aurora.Devices
 
         public void Shutdown()
         {
-            foreach (DeviceContainer device in devices)
+            foreach (var device in devices)
             {
-                if (device.Device.IsInitialized())
+                if (device.Value.Device.IsInitialized())
                 {
-                    device.Device.Shutdown();
-                    Global.logger.Info("Device, " + device.Device.GetDeviceName() + ", was shutdown");
+                    device.Value.Device.Shutdown();
+                    Global.logger.Info("Device, " + device.Value.Device.GetDeviceName() + ", was shutdown");
                 }
             }
 
@@ -255,29 +437,54 @@ namespace Aurora.Devices
 
         public void ResetDevices()
         {
-            foreach (DeviceContainer device in devices)
+            foreach (var device in devices)
             {
-                if (device.Device.IsInitialized())
+                if (device.Value.Device.IsInitialized())
                 {
-                    device.Device.Reset();
+                    device.Value.Device.Reset();
                 }
             }
         }
 
-        public void UpdateDevices(DeviceColorComposition composition, bool forced = false)
+        public void UpdateDevices(BitmapLock composition, bool forced = false)
         {
-            foreach (DeviceContainer device in devices)
+            //Update deviceLayout colours
+            foreach (var deviceGroups in this.Settings.Devices)
             {
-                if (device.Device.IsInitialized())
+                for (int i = 0; i < deviceGroups.Value.Count; i++)
                 {
-                    if (Global.Configuration.devices_disabled.Contains(device.Device.GetType()))
+                    DeviceLayout device = deviceGroups.Value[i];
+                    Point offset = device.Location.ToPixel();
+                    Dictionary<LEDINT, Color> colours = new Dictionary<LEDINT, Color>();
+                    foreach (KeyValuePair<LEDINT, BitmapRectangle> led in device.VirtualGroup.BitmapMap)
+                    {
+                        colours.Add(led.Key, composition.Bitmap.GetRegionColor(led.Value.AddOffset(offset)));
+                    }
+
+                    device.DeviceColours = new DeviceColorComposition()
+                    {
+                        deviceColours = colours,
+                        keyBitmap = composition.Bitmap.Clone(device.VirtualGroup.BitmapRegion.AddOffset(offset), composition.Bitmap.PixelFormat)
+
+                    };
+                }
+            }
+
+            //Update devices with the overall composition
+            foreach (KeyValuePair<short, DeviceContainer> deviceContainer in devices)
+            {
+                DeviceIntegration device = deviceContainer.Value.Device;
+
+                if (device.IsInitialized())
+                {
+                    if (Global.Configuration.devices_disabled.Contains(device.GetType()))
                     {
                         //Initialized when it's supposed to be disabled? SMACK IT!
-                        device.Device.Shutdown();
+                        device.Shutdown();
                         continue;
                     }
                     
-                    device.UpdateDevice(composition, forced);
+                    deviceContainer.Value.UpdateDevice(composition, forced);
                 }
             }
         }
@@ -286,8 +493,8 @@ namespace Aurora.Devices
         {
             string devices_info = "";
 
-            foreach (DeviceContainer device in devices)
-                devices_info += device.Device.GetDeviceDetails() + "\r\n";
+            foreach (var device in devices)
+                devices_info += device.Value.Device.GetDeviceDetails() + "\r\n";
 
             if (retryAttemptsLeft > 0)
                 devices_info += "Retries: " + retryAttemptsLeft + "\r\n";

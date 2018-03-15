@@ -136,142 +136,6 @@ namespace Aurora.Settings
         LeftHanded = 2
     }
 
-    public enum PreferredKeyboard
-    {
-        [Description("None")]
-        None = 0,
-        /*
-        [Description("Logitech")]
-        Logitech = 1,
-        [Description("Corsair")]
-        Corsair = 2,
-        [Description("Razer")]
-        Razer = 3,
-        
-        [Description("Clevo")]
-        Clevo = 4,
-        [Description("Cooler Master")]
-        CoolerMaster = 5,
-        */
-
-        //Logitech range is 100-199
-        [Description("Logitech - G910")]
-        Logitech_G910 = 100,
-        [Description("Logitech - G410")]
-        Logitech_G410 = 101,
-        [Description("Logitech - G810")]
-        Logitech_G810 = 102,
-
-        //Corsair range is 200-299
-        [Description("Corsair - K95")]
-        Corsair_K95 = 200,
-        [Description("Corsair - K70")]
-        Corsair_K70 = 201,
-        [Description("Corsair - K65")]
-        Corsair_K65 = 202,
-        [Description("Corsair - STRAFE")]
-        Corsair_STRAFE = 203,
-        [Description("Corsair - K95 Platinum")]
-        Corsair_K95_PL = 204,
-
-        //Razer range is 300-399
-        [Description("Razer - Blackwidow")]
-        Razer_Blackwidow = 300,
-        [Description("Razer - Blackwidow X")]
-        Razer_Blackwidow_X = 301,
-        [Description("Razer - Blackwidow Tournament Edition")]
-        Razer_Blackwidow_TE = 302,
-        [Description("Razer - Blade")]
-        Razer_Blade = 303,
-
-        //Clevo range is 400-499
-
-        //Cooler Master range is 500-599
-        [Description("Masterkeys Pro L")]
-        Masterkeys_Pro_L = 500,
-        [Description("Masterkeys Pro S")]
-        Masterkeys_Pro_S = 501,
-        [Description("Masterkeys Pro M")]
-        Masterkeys_Pro_M = 502,
-
-        //Roccat range is 600-699
-        //[Description("Roccat Ryos")]
-        //Roccat_Ryos = 600
-
-        //Steelseries range is 700-799
-        [Description("SteelSeries Apex M800")]
-        SteelSeries_Apex_M800 = 700,
-        [Description("SteelSeries Apex M750")]
-        SteelSeries_Apex_M750 = 701,
-        [Description("SteelSeries Apex M750 TKL")]
-        SteelSeries_Apex_M750_TKL = 702
-    }
-
-    public enum PreferredKeyboardLocalization
-    {
-        [Description("Automatic Detection")]
-        None = 0,
-        [Description("International")]
-        intl = 1,
-        [Description("United States")]
-        us = 2,
-        [Description("United Kingdom")]
-        uk = 3,
-        [Description("Russian")]
-        ru = 4,
-        [Description("French")]
-        fr = 5,
-        [Description("Deutsch")]
-        de = 6,
-        [Description("Japanese")]
-        jpn = 7,
-        [Description("Turkish")]
-        tr = 8,
-        [Description("Nordic")]
-        nordic = 9,
-        [Description("Swiss")]
-        swiss = 10,
-        [Description("Portuguese (Brazilian ABNT2)")]
-        abnt2 = 11,
-        [Description("DVORAK (US)")]
-        dvorak = 12,
-        [Description("DVORAK (INT)")]
-        dvorak_int = 13
-    }
-
-    public enum PreferredMouse
-    {
-        [Description("None")]
-        None = 0,
-
-        [Description("Generic Peripheral")]
-        Generic_Peripheral = 1,
-
-        //Logitech range is 100-199
-        [Description("Logitech - G900")]
-        Logitech_G900 = 100,
-
-        //Corsair range is 200-299
-        [Description("Corsair - Sabre")]
-        Corsair_Sabre = 200,
-        [Description("Corsair - M65")]
-        Corsair_M65 = 201,
-        [Description("Corsair - Katar")]
-        Corsair_Katar = 202,
-
-        //Razer range is 300-399
-
-        //Clevo range is 400-499
-        [Description("Clevo - Touchpad")]
-        Clevo_Touchpad = 400
-
-        //Cooler Master range is 500-599
-
-        //Roccat range is 600-699
-
-        //Steelseries range is 700-799
-    }
-
     public enum KeycapType
     {
         [Description("Default")]
@@ -320,45 +184,42 @@ namespace Aurora.Settings
 
         private bool useVolumeAsBrightness = false;
         [JsonProperty(PropertyName = "use_volume_as_brightness")]
-        public bool UseVolumeAsBrightness { get { return useVolumeAsBrightness; } set { useVolumeAsBrightness = value; InvokePropertyChanged(); } }
+        public bool UseVolumeAsBrightness { get { return useVolumeAsBrightness; } set { var old = useVolumeAsBrightness; useVolumeAsBrightness = value; InvokePropertyChanged(old, value); } }
 
         private float globalBrightness = 1.0f;
         [JsonProperty(PropertyName = "global_brightness")]
-        public float GlobalBrightness { get { return globalBrightness; } set { globalBrightness = value; InvokePropertyChanged(); } }
+        public float GlobalBrightness { get { return globalBrightness; } set { var old = globalBrightness; globalBrightness = value; InvokePropertyChanged(old, value); } }
 
         private float keyboardBrightness = 1.0f;
         [JsonProperty(PropertyName = "keyboard_brightness_modifier")]
-        public float KeyboardBrightness { get { return keyboardBrightness; } set{ keyboardBrightness = value; InvokePropertyChanged(); } }
+        public float KeyboardBrightness { get { return keyboardBrightness; } set{ var old = keyboardBrightness; keyboardBrightness = value; InvokePropertyChanged(old, value); } }
 
         private float peripheralBrightness = 1.0f;
         [JsonProperty(PropertyName = "peripheral_brightness_modifier")]
-        public float PeripheralBrightness { get { return peripheralBrightness; } set { peripheralBrightness = value; InvokePropertyChanged(); } }
+        public float PeripheralBrightness { get { return peripheralBrightness; } set { var old = peripheralBrightness; peripheralBrightness = value; InvokePropertyChanged(old, value); } }
 
         private bool getDevReleases = false;
-        public bool GetDevReleases { get { return getDevReleases; } set { getDevReleases = value; InvokePropertyChanged(); } }
+        public bool GetDevReleases { get { return getDevReleases; } set { var old = getDevReleases; getDevReleases = value; InvokePropertyChanged(old, value); } }
 
         private bool highPriority = false;
-        public bool HighPriority { get { return highPriority; } set { highPriority = value; InvokePropertyChanged(); } }
+        public bool HighPriority { get { return highPriority; } set { var old = highPriority; highPriority = value; InvokePropertyChanged(old, value); } }
 
         private bool showDefaultLightingOnDisabled = false;
-        public bool ShowDefaultLightingOnDisabled { get { return showDefaultLightingOnDisabled; } set { showDefaultLightingOnDisabled = value; InvokePropertyChanged(); } }
+        public bool ShowDefaultLightingOnDisabled { get { return showDefaultLightingOnDisabled; } set { var old = showDefaultLightingOnDisabled; showDefaultLightingOnDisabled = value; InvokePropertyChanged(old, value); } }
 
         private BitmapAccuracy bitmapAccuracy = BitmapAccuracy.Okay;
-        public BitmapAccuracy BitmapAccuracy { get { return bitmapAccuracy; } set { bitmapAccuracy = value; InvokePropertyChanged(); } }
+        public BitmapAccuracy BitmapAccuracy { get { return bitmapAccuracy; } set { var old = bitmapAccuracy; bitmapAccuracy = value; InvokePropertyChanged(old, value); } }
 
         public bool updates_check_on_start_up;
         public bool start_silently;
         public AppExitMode close_mode;
         public MouseOrientationType mouse_orientation;
-        public PreferredKeyboard keyboard_brand;
-        public PreferredKeyboardLocalization keyboard_localization;
-        public PreferredMouse mouse_preference;
         public KeycapType virtualkeyboard_keycap_type;
         public ApplicationDetectionMode detection_mode;
         public HashSet<String> excluded_programs;
-        public bool devices_disable_keyboard;
-        public bool devices_disable_mouse;
-        public bool devices_disable_headset;
+        //public bool devices_disable_keyboard;
+        //public bool devices_disable_mouse;
+        //public bool devices_disable_headset;
         public HashSet<Type> devices_disabled;
         public bool OverlaysInPreview;
 
@@ -414,16 +275,13 @@ namespace Aurora.Settings
             start_silently = false;
             close_mode = AppExitMode.Ask;
             mouse_orientation = MouseOrientationType.RightHanded;
-            keyboard_brand = PreferredKeyboard.None;
-            keyboard_localization = PreferredKeyboardLocalization.None;
-            mouse_preference = PreferredMouse.None;
             virtualkeyboard_keycap_type = KeycapType.Default;
             detection_mode = ApplicationDetectionMode.WindowsEvents;
             excluded_programs = new HashSet<string>();
             //additional_profiles = new Dictionary<string, GenericApplicationProfileManager>();
-            devices_disable_keyboard = false;
+            /*devices_disable_keyboard = false;
             devices_disable_mouse = false;
-            devices_disable_headset = false;
+            devices_disable_headset = false;*/
             devices_disabled = new HashSet<Type>();
             OverlaysInPreview = false;
 

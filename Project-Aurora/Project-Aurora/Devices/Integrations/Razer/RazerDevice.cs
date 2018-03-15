@@ -9,7 +9,7 @@ using KeyboardCustom = Corale.Colore.Razer.Keyboard.Effects.Custom;
 
 namespace Aurora.Devices.Razer
 {
-    class RazerDevice : Device
+    class RazerDevice : DeviceIntegration
     {
 
 
@@ -212,7 +212,7 @@ namespace Aurora.Devices.Razer
         {
             watch.Restart();
 
-            bool update_result = UpdateDevice(colorComposition.keyColors, token, forced);
+            bool update_result = UpdateDevice(colorComposition.deviceColours, token, forced);
 
             watch.Stop();
             lastUpdateTime = watch.ElapsedMilliseconds;

@@ -18,7 +18,7 @@ using Aurora.Settings;
 
 namespace Aurora.Devices.Roccat
 {
-    class RoccatDevice : Device
+    class RoccatDevice : DeviceIntegration
     {
         private String devicename = "Roccat";
         private bool isInitialized = false;
@@ -173,7 +173,7 @@ namespace Aurora.Devices.Roccat
 
             if (token.IsCancellationRequested) return false;
 
-            bool update_result = UpdateDevice(colorComposition.keyColors, token, forced);
+            bool update_result = UpdateDevice(colorComposition.deviceColours, token, forced);
 
             watch.Stop();
             lastUpdateTime = watch.ElapsedMilliseconds;

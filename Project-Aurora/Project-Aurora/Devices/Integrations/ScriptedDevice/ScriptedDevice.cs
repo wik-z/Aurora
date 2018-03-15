@@ -8,7 +8,7 @@ using Microsoft.Win32.TaskScheduler;
 
 namespace Aurora.Devices.ScriptedDevice
 {
-    public class ScriptedDevice : Device
+    public class ScriptedDevice : DeviceIntegration
     {
         private bool crashed = false;
         private readonly dynamic script = null;
@@ -167,7 +167,7 @@ namespace Aurora.Devices.ScriptedDevice
         {
             watch.Restart();
 
-            bool update_result = UpdateDevice(colorComposition.keyColors, token, forced);
+            bool update_result = UpdateDevice(colorComposition.deviceColours, token, forced);
 
             watch.Stop();
             lastUpdateTime = watch.ElapsedMilliseconds;

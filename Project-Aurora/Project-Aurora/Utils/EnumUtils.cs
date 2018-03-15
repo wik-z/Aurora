@@ -1,4 +1,5 @@
 ﻿using Aurora.Devices;
+using Aurora.Devices.Layout;
 using Aurora.Profiles.Desktop;
 using Aurora.Profiles.GTA5;
 using Aurora.Profiles.Payday_2.GSI.Nodes;
@@ -10,6 +11,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
 using System.Windows.Data;
+using System.Linq;
 
 namespace Aurora.Utils
 {
@@ -79,7 +81,7 @@ namespace Aurora.Utils
         }
     }
 
-    public class DeviceKeysToStringVC : IValueConverter
+    /*public class DeviceKeysToStringVC : IValueConverter
     {
         protected Type EnumType = typeof(DeviceKeys);
         protected Enum DefaultEnum = DeviceKeys.NONE;
@@ -96,8 +98,8 @@ namespace Aurora.Utils
                 return DefaultEnum.GetDescription();
 
             DeviceKeys key = (DeviceKeys)value;
-
-            return Global.kbLayout.KeyText.ContainsKey(key) ? Global.kbLayout.KeyText[key] : key.GetDescription();
+            Dictionary<short, string> keyText = ((KeyboardDeviceLayout)Global.deviceManager.Settings.Devices[KeyboardDeviceLayout.DeviceTypeID].First()).KeyText;
+            return keyText.ContainsKey(key) ? keyText[key] : key.GetDescription();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -109,7 +111,7 @@ namespace Aurora.Utils
                 return (Enum)Enum.Parse(EnumType, DefaultEnum.ToString());
             return this.StringToEnum(EnumType, value.ToString());
         }
-    }
+    }*/
 
     public class KeysToStringVC : EnumToStringVC
     {
@@ -135,7 +137,7 @@ namespace Aurora.Utils
         public IdleEffectsToStringVC() : base(IdleEffects.None) { }
     }
 
-    public class KbLayoutToStringVC : EnumToStringVC
+    /*public class KbLayoutToStringVC : EnumToStringVC
     {
         public KbLayoutToStringVC() : base(PreferredKeyboardLocalization.None) { }
     }
@@ -148,7 +150,7 @@ namespace Aurora.Utils
     public class MouseBrandToStringVC : EnumToStringVC
     {
         public MouseBrandToStringVC() : base(PreferredMouse.None) { }
-    }
+    }*/
 
     public class BitmapAccuracyToStringVC : EnumToStringVC
     {

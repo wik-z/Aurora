@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -7,33 +8,27 @@ using System.Threading.Tasks;
 
 namespace Aurora.Settings
 {
-    public class PropertyChangedExEventArgs : EventArgs
+    public class PropertyChangedExEventArgs : PropertyChangedEventArgs
     {
-        public string PropertyName { get; set; }
-
         public object OldValue { get; set; }
 
         public object NewValue { get; set; }
 
-        public PropertyChangedExEventArgs(string propertyName, object oldValue, object newValue)
+        public PropertyChangedExEventArgs(string propertyName, object oldValue, object newValue) : base(propertyName)
         {
-            PropertyName = propertyName;
             OldValue = oldValue;
             NewValue = newValue;
         }
     }
 
-    public delegate void PropertyChangedExEventHandler(object sender, PropertyChangedExEventArgs e);
-
-
-    public interface INotifyPropertyChangedEx
+    public abstract class NotifyPropertyChangedEx : INotifyPropertyChanged
     {
-        event PropertyChangedExEventHandler PropertyChanged;
-    }
+        public event PropertyChangedEventHandler PropertyChanged;
 
-    public abstract class NotifyPropertyChangedEx : INotifyPropertyChangedEx
-    {
-        public event PropertyChangedExEventHandler PropertyChanged;
+        protected void InvokePropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
         protected void InvokePropertyChanged(object oldValue, object newValue, [CallerMemberName] string propertyName = null)
         {

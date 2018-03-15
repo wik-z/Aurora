@@ -96,7 +96,7 @@ namespace Aurora.Profiles.RocketLeague.Layers
 
                         LinearGradientBrush the__split_brush =  new LinearGradientBrush(
                                 new Point(0, 0),
-                                new Point(Effects.canvas_biggest, 0),
+                                new Point(Global.deviceManager.canvas_biggest, 0),
                                 Color.Red, Color.Red);
                         Color[] colors = new Color[]
                         {

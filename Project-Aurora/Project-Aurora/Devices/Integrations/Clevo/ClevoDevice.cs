@@ -9,7 +9,7 @@ using Aurora.Settings;
 
 namespace Aurora.Devices.Clevo
 {
-    class ClevoDevice : Device
+    class ClevoDevice : DeviceIntegration
     {
         // Generic Variables
         private string devicename = "Clevo Keyboard";
@@ -153,7 +153,7 @@ namespace Aurora.Devices.Clevo
             watch.Restart();
             bool update_result = false;
 
-            Dictionary<DeviceKeys, Color> keyColors = colorComposition.keyColors;
+            Dictionary<DeviceKeys, Color> keyColors = colorComposition.deviceColours;
             if (token.IsCancellationRequested) return false;
             try
             {
@@ -188,8 +188,8 @@ namespace Aurora.Devices.Clevo
                     // Clevo 3 region keyboard
 
                     // Left Side (From ESC to Half Spacebar)
-                    BitmapRectangle keymap_esc = Effects.GetBitmappingFromDeviceKey(DeviceKeys.ESC);
-                    BitmapRectangle keymap_space = Effects.GetBitmappingFromDeviceKey(DeviceKeys.SPACE);
+                    BitmapRectangle keymap_esc = Global.deviceManager.GetBitmappingFromLED(DeviceKeys.ESC);
+                    BitmapRectangle keymap_space = Global.deviceManager.GetBitmappingFromLED(DeviceKeys.SPACE);
                     PointF spacebar_center = keymap_space.Center; // Key Center
 
                     int spacebar_x = (int)spacebar_center.X - keymap_esc.Left;
@@ -212,7 +212,7 @@ namespace Aurora.Devices.Clevo
                     if (token.IsCancellationRequested) return false;
 
                     // Center (Other Half of Spacebar to F11) - Clevo keyboards are very compact and the right side color bleeds over to the up/left/right/down keys)
-                    BitmapRectangle keymap_f11 = Effects.GetBitmappingFromDeviceKey(DeviceKeys.F11);
+                    BitmapRectangle keymap_f11 = Global.deviceManager.GetBitmappingFromLED(DeviceKeys.F11);
 
                     int f11_x_width = Convert.ToInt32(keymap_f11.Center.X - spacebar_x);
 
@@ -232,7 +232,7 @@ namespace Aurora.Devices.Clevo
                     if (token.IsCancellationRequested) return false;
 
                     // Right Side
-                    BitmapRectangle keymap_numenter = Effects.GetBitmappingFromDeviceKey(DeviceKeys.NUM_ENTER);
+                    BitmapRectangle keymap_numenter = Global.deviceManager.GetBitmappingFromLED(DeviceKeys.NUM_ENTER);
                     BitmapRectangle region_right = new BitmapRectangle(Convert.ToInt32(keymap_f11.Center.X),
                         keymap_esc.Top, Convert.ToInt32(keymap_numenter.Center.X - keymap_f11.Center.X), height);
 

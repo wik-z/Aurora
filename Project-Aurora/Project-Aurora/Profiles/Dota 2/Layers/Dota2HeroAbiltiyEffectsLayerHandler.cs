@@ -862,7 +862,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(0, 200, 255), 3)
                 );
             razor_plasma_field_track.SetFrame(1.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 200, 255), 3)
+                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest / 2.0f, Color.FromArgb(0, 200, 255), 3)
                 );
             razor_plasma_field_track.SetFrame(2.0f,
                 new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(0, 200, 255), 3)
@@ -874,10 +874,10 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_height / 2.0f, Color.FromArgb(0, 200, 255))
                 );
             crystal_maiden_crystal_nova_track.SetFrame(0.5f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.75f / 2.0f, Color.FromArgb(0, 200, 255))
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest * 0.75f / 2.0f, Color.FromArgb(0, 200, 255))
                 );
             crystal_maiden_crystal_nova_track.SetFrame(1.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 0, 200, 255))
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest / 2.0f, Color.FromArgb(0, 0, 200, 255))
                 );
 
             riki_smoke_screen_track = new AnimationTrack("Riki Smoke Screen", 6.5f);
@@ -885,21 +885,21 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_height / 2.0f, Color.FromArgb(163, 70, 255))
                 );
             riki_smoke_screen_track.SetFrame(5.525f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.75f / 2.0f, Color.FromArgb(163, 70, 255))
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest * 0.75f / 2.0f, Color.FromArgb(163, 70, 255))
                 );
             riki_smoke_screen_track.SetFrame(6.5f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 163, 70, 255))
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest / 2.0f, Color.FromArgb(0, 163, 70, 255))
                 );
 
             lina_dragon_slave_track = new AnimationTrack("Lina Dragon Slave", 1.25f);
             lina_dragon_slave_track.SetFrame(0.0f,
-                new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest * 0.10f, Color.FromArgb(255, 80, 0))
+                new AnimationFilledCircle(0, Effects.canvas_height_center, Global.deviceManager.canvas_biggest * 0.10f, Color.FromArgb(255, 80, 0))
                 );
             lina_dragon_slave_track.SetFrame(0.9375f,
-                new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest * 0.75f, Color.FromArgb(255, 80, 0))
+                new AnimationFilledCircle(0, Effects.canvas_height_center, Global.deviceManager.canvas_biggest * 0.75f, Color.FromArgb(255, 80, 0))
                 );
             lina_dragon_slave_track.SetFrame(1.25f,
-                new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 255, 80, 0))
+                new AnimationFilledCircle(0, Effects.canvas_height_center, Global.deviceManager.canvas_biggest, Color.FromArgb(0, 255, 80, 0))
                 );
 
             lina_light_strike_array_track = new AnimationTrack("Lina Light Strike", 2.0f);
@@ -910,21 +910,21 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(0, 255, 80, 0))
                 );
             lina_light_strike_array_track.SetFrame(0.5f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.1f / 2.0f, Color.FromArgb(255, 80, 0))
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest * 0.1f / 2.0f, Color.FromArgb(255, 80, 0))
                 );
             lina_light_strike_array_track.SetFrame(1.25f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.5f / 2.0f, Color.FromArgb(255, 80, 0))
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest * 0.5f / 2.0f, Color.FromArgb(255, 80, 0))
                 );
             lina_light_strike_array_track.SetFrame(2.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 255, 80, 0))
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest / 2.0f, Color.FromArgb(0, 255, 80, 0))
                 );
 
             nevermore_shadowraze_track = new AnimationTrack("Shadow Fiend Raze", 0.7f);
             nevermore_shadowraze_track.SetFrame(0.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.5f / 2.0f, Color.FromArgb(255, 0, 0))
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest * 0.5f / 2.0f, Color.FromArgb(255, 0, 0))
                 );
             nevermore_shadowraze_track.SetFrame(0.595f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.075f / 2.0f, Color.FromArgb(255, 0, 0))
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest * 0.075f / 2.0f, Color.FromArgb(255, 0, 0))
                 );
             nevermore_shadowraze_track.SetFrame(0.7f,
                 new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(0, 255, 0, 0))
@@ -935,10 +935,10 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 0, 0))
                 );
             nevermore_requiem_track.SetFrame(1.7f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.85f / 2.0f, Color.FromArgb(255, 0, 0))
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest * 0.85f / 2.0f, Color.FromArgb(255, 0, 0))
                 );
             nevermore_requiem_track.SetFrame(2.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 255, 0, 0))
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest / 2.0f, Color.FromArgb(0, 255, 0, 0))
                 );
 
             zuus_lightning_bolt_track = new AnimationTrack("Zeus Lighting Bolt", 0.5f);
@@ -968,18 +968,18 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(128, 0, 255), 3)
                 );
             antimage_blink_track.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(128, 0, 255), 3)
+                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest, Color.FromArgb(128, 0, 255), 3)
                 );
 
             antimage_mana_void_track = new AnimationTrack("Anti-mage Void", 0.5f);
             antimage_mana_void_track.SetFrame(0.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.10f, Color.FromArgb(0, 0, 255))
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest * 0.10f, Color.FromArgb(0, 0, 255))
                 );
             antimage_mana_void_track.SetFrame(0.425f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.85f, Color.FromArgb(0, 0, 255))
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest * 0.85f, Color.FromArgb(0, 0, 255))
                 );
             antimage_mana_void_track.SetFrame(0.5f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 0, 0, 255))
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest, Color.FromArgb(0, 0, 0, 255))
                 );
 
             antimage_mana_void_core_track = new AnimationTrack("Anti-mage Void Core", 0.5f);
@@ -987,10 +987,10 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 255, 255))
                 );
             antimage_mana_void_core_track.SetFrame(0.425f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.25f, Color.FromArgb(255, 255, 255))
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest * 0.25f, Color.FromArgb(255, 255, 255))
                 );
             antimage_mana_void_core_track.SetFrame(0.5f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.5f, Color.FromArgb(0, 255, 255, 255))
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest * 0.5f, Color.FromArgb(0, 255, 255, 255))
                 );
 
             ancient_apparition_ice_blast_track = new AnimationTrack("AA Ice Blast", 1.0f);
@@ -998,10 +998,10 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(200, 200, 255))
                 );
             ancient_apparition_ice_blast_track.SetFrame(0.85f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.85f, Color.FromArgb(200, 200, 255))
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest * 0.85f, Color.FromArgb(200, 200, 255))
                 );
             ancient_apparition_ice_blast_track.SetFrame(1.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 200, 200, 255))
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest, Color.FromArgb(0, 200, 200, 255))
                 );
 
             axe_berserkers_call_track = new AnimationTrack("Axe Berserker", 0.7f);
@@ -1009,10 +1009,10 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 50, 0))
                 );
             axe_berserkers_call_track.SetFrame(0.595f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.85f, Color.FromArgb(255, 50, 0))
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest * 0.85f, Color.FromArgb(255, 50, 0))
                 );
             axe_berserkers_call_track.SetFrame(0.7f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 255, 50, 0))
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest, Color.FromArgb(0, 255, 50, 0))
                 );
 
             beastmaster_primal_roar_track = new AnimationTrack("BM Primal Roar", 1.0f);
@@ -1020,10 +1020,10 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationFilledCircle(0, Effects.canvas_height_center, 0, Color.FromArgb(255, 200, 100))
                 );
             beastmaster_primal_roar_track.SetFrame(0.75f,
-                new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest * 0.75f, Color.FromArgb(255, 200, 100))
+                new AnimationFilledCircle(0, Effects.canvas_height_center, Global.deviceManager.canvas_biggest * 0.75f, Color.FromArgb(255, 200, 100))
                 );
             beastmaster_primal_roar_track.SetFrame(1.0f,
-                new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 255, 200, 100))
+                new AnimationFilledCircle(0, Effects.canvas_height_center, Global.deviceManager.canvas_biggest, Color.FromArgb(0, 255, 200, 100))
                 );
 
             brewmaster_thunder_clap_track = new AnimationTrack("Brewmaster Thunder Clap", 1.5f);
@@ -1031,10 +1031,10 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(170, 90, 0))
                 );
             brewmaster_thunder_clap_track.SetFrame(0.75f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.5f, Color.FromArgb(170, 90, 0))
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest * 0.5f, Color.FromArgb(170, 90, 0))
                 );
             brewmaster_thunder_clap_track.SetFrame(1.5f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 170, 90, 0))
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest, Color.FromArgb(0, 170, 90, 0))
                 );
 
             centaur_hoof_stomp_track = new AnimationTrack("Centaur Stomp", 1.0f);
@@ -1042,10 +1042,10 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 50, 0))
                 );
             centaur_hoof_stomp_track.SetFrame(0.5f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.5f, Color.FromArgb(255, 50, 0))
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest * 0.5f, Color.FromArgb(255, 50, 0))
                 );
             centaur_hoof_stomp_track.SetFrame(1.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 255, 50, 0))
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest, Color.FromArgb(0, 255, 50, 0))
                 );
 
             chaos_knight_chaos_bolt_mix = new AnimationMix();
@@ -1067,7 +1067,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(175, 0, 0))
                 );
             chaos_knight_chaos_bolt_projectile.SetFrame(0.25f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.5f, Color.FromArgb(0, 175, 0, 0))
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest * 0.5f, Color.FromArgb(0, 175, 0, 0))
                 );
             chaos_knight_chaos_bolt_mix.AddTrack(chaos_knight_chaos_bolt_projectile);
 
@@ -1076,21 +1076,21 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 80, 0))
                 );
             rattletrap_rocket_flare_track.SetFrame(0.25f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.25f, Color.FromArgb(255, 80, 0))
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest * 0.25f, Color.FromArgb(255, 80, 0))
                 );
             rattletrap_rocket_flare_track.SetFrame(0.5f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.5f, Color.FromArgb(0, 255, 80, 0))
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest * 0.5f, Color.FromArgb(0, 255, 80, 0))
                 );
 
             dragon_knight_breathe_fire_track = new AnimationTrack("Dragon Knight Breathe", 1.25f);
             dragon_knight_breathe_fire_track.SetFrame(0.0f,
-                new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest * 0.10f, Color.FromArgb(255, 80, 0))
+                new AnimationFilledCircle(0, Effects.canvas_height_center, Global.deviceManager.canvas_biggest * 0.10f, Color.FromArgb(255, 80, 0))
                 );
             dragon_knight_breathe_fire_track.SetFrame(0.9375f,
-                new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest * 0.75f, Color.FromArgb(255, 80, 0))
+                new AnimationFilledCircle(0, Effects.canvas_height_center, Global.deviceManager.canvas_biggest * 0.75f, Color.FromArgb(255, 80, 0))
                 );
             dragon_knight_breathe_fire_track.SetFrame(1.25f,
-                new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 255, 80, 0))
+                new AnimationFilledCircle(0, Effects.canvas_height_center, Global.deviceManager.canvas_biggest, Color.FromArgb(0, 255, 80, 0))
                 );
 
             elder_titan_earth_splitter_track = new AnimationTrack("Elder Titan Earth Splitter", 1.0f, 3.0f);
@@ -1119,13 +1119,13 @@ namespace Aurora.Profiles.Dota_2.Layers
             AnimationTrack kunkka_torrent_spash_track = new AnimationTrack("Kunka Torrent Splash", 2.4f, 1.6f);
 
             kunkka_torrent_spash_track.SetFrame(0.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.1f / 2.0f, Color.FromArgb(0, 220, 245))
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest * 0.1f / 2.0f, Color.FromArgb(0, 220, 245))
                 );
             kunkka_torrent_spash_track.SetFrame(2.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.83f / 2.0f, Color.FromArgb(0, 220, 245))
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest * 0.83f / 2.0f, Color.FromArgb(0, 220, 245))
                 );
             kunkka_torrent_spash_track.SetFrame(2.4f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 0, 220, 245))
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest / 2.0f, Color.FromArgb(0, 0, 220, 245))
                 );
 
             kunkka_torrent_mix.AddTrack(kunkka_torrent_bg_track);
@@ -1135,13 +1135,13 @@ namespace Aurora.Profiles.Dota_2.Layers
             kunkka_ghostship_track = new AnimationTrack("Kunka Ghostship", 2.7f);
 
             kunkka_ghostship_track.SetFrame(0.0f,
-                    new AnimationFilledCircle(-(Effects.canvas_biggest / 2.0f), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 220, 245))
+                    new AnimationFilledCircle(-(Global.deviceManager.canvas_biggest / 2.0f), Effects.canvas_height_center, Global.deviceManager.canvas_biggest / 2.0f, Color.FromArgb(0, 220, 245))
                     );
             kunkka_ghostship_track.SetFrame(2.3f,
-                new AnimationFilledCircle(Effects.canvas_width + (Effects.canvas_biggest / 2.0f) * 0.85f, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 220, 245))
+                new AnimationFilledCircle(Effects.canvas_width + (Global.deviceManager.canvas_biggest / 2.0f) * 0.85f, Effects.canvas_height_center, Global.deviceManager.canvas_biggest / 2.0f, Color.FromArgb(0, 220, 245))
                 );
             kunkka_ghostship_track.SetFrame(2.7f,
-                new AnimationFilledCircle(Effects.canvas_width + (Effects.canvas_biggest / 2.0f), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 0, 220, 245))
+                new AnimationFilledCircle(Effects.canvas_width + (Global.deviceManager.canvas_biggest / 2.0f), Effects.canvas_height_center, Global.deviceManager.canvas_biggest / 2.0f, Color.FromArgb(0, 0, 220, 245))
                 );
 
             legion_commander_overwhelming_odds_track = new AnimationTrack("Legion Commander Overwhelming Odds", 1.0f);
@@ -1201,13 +1201,13 @@ namespace Aurora.Profiles.Dota_2.Layers
 
             magnataur_shockwave_track = new AnimationTrack("Magnataur Shockwave", 1.0f);
             magnataur_shockwave_track.SetFrame(0.0f,
-                    new AnimationFilledCircle(-(Effects.canvas_biggest / 2.0f), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 205, 255))
+                    new AnimationFilledCircle(-(Global.deviceManager.canvas_biggest / 2.0f), Effects.canvas_height_center, Global.deviceManager.canvas_biggest / 2.0f, Color.FromArgb(0, 205, 255))
                     );
             magnataur_shockwave_track.SetFrame(0.9f,
-                new AnimationFilledCircle(Effects.canvas_width + (Effects.canvas_biggest / 2.0f) * 0.9f, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 205, 255))
+                new AnimationFilledCircle(Effects.canvas_width + (Global.deviceManager.canvas_biggest / 2.0f) * 0.9f, Effects.canvas_height_center, Global.deviceManager.canvas_biggest / 2.0f, Color.FromArgb(0, 205, 255))
                 );
             magnataur_shockwave_track.SetFrame(1.0f,
-                new AnimationFilledCircle(Effects.canvas_width + (Effects.canvas_biggest / 2.0f), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 0, 205, 255))
+                new AnimationFilledCircle(Effects.canvas_width + (Global.deviceManager.canvas_biggest / 2.0f), Effects.canvas_height_center, Global.deviceManager.canvas_biggest / 2.0f, Color.FromArgb(0, 0, 205, 255))
                 );
 
             omniknight_purification_track = new AnimationTrack("Omniknight Purification", 1.0f);
@@ -1215,10 +1215,10 @@ namespace Aurora.Profiles.Dota_2.Layers
                     new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0))
                     );
             omniknight_purification_track.SetFrame(0.8f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0))
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0))
                 );
             omniknight_purification_track.SetFrame(1.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 255, 160, 0))
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest / 2.0f, Color.FromArgb(0, 255, 160, 0))
                 );
 
             omniknight_repel_track = new AnimationTrack("Omniknight Repel", 12.0f);
@@ -1304,7 +1304,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(115, 255, 0), 4)
                 );
             sandking_epicenter_wave0.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(115, 255, 0), 4)
+                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest / 2.0f, Color.FromArgb(115, 255, 0), 4)
                 );
 
             AnimationTrack sandking_epicenter_wave1 = new AnimationTrack("Sandsking Epicenter Wave1", 0.5f, 2.0f);
@@ -1312,7 +1312,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandking_epicenter_wave1.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             AnimationTrack sandking_epicenter_wave2 = new AnimationTrack("Sandsking Epicenter Wave2", 0.5f, 2.16f);
@@ -1320,7 +1320,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandking_epicenter_wave2.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             AnimationTrack sandking_epicenter_wave3 = new AnimationTrack("Sandsking Epicenter Wave3", 0.5f, 2.32f);
@@ -1328,7 +1328,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandking_epicenter_wave3.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             AnimationTrack sandking_epicenter_wave4 = new AnimationTrack("Sandsking Epicenter Wave4", 0.5f, 2.48f);
@@ -1336,7 +1336,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandking_epicenter_wave4.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             AnimationTrack sandking_epicenter_wave5 = new AnimationTrack("Sandsking Epicenter Wave5", 0.5f, 2.64f);
@@ -1344,7 +1344,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandking_epicenter_wave5.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             AnimationTrack sandking_epicenter_wave6 = new AnimationTrack("Sandsking Epicenter Wave6", 0.5f, 2.8f);
@@ -1352,7 +1352,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandking_epicenter_wave6.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             AnimationTrack sandking_epicenter_wave7 = new AnimationTrack("Sandsking Epicenter Wave7", 0.5f, 2.96f);
@@ -1360,7 +1360,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandking_epicenter_wave7.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             AnimationTrack sandking_epicenter_wave8 = new AnimationTrack("Sandsking Epicenter Wave8", 0.5f, 3.12f);
@@ -1368,7 +1368,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandking_epicenter_wave8.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             AnimationTrack sandking_epicenter_wave9 = new AnimationTrack("Sandsking Epicenter Wave9", 0.5f, 3.28f);
@@ -1376,7 +1376,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandking_epicenter_wave9.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             AnimationTrack sandking_epicenter_wave10 = new AnimationTrack("Sandsking Epicenter Wave10", 0.5f, 3.44f);
@@ -1384,7 +1384,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandking_epicenter_wave10.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             AnimationTrack sandking_epicenter_wave11 = new AnimationTrack("Sandsking Epicenter Wave11", 0.5f, 3.6f);
@@ -1392,14 +1392,14 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandking_epicenter_wave11.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
             AnimationTrack sandking_epicenter_wave12 = new AnimationTrack("Sandsking Epicenter Wave12", 0.5f, 3.76f);
             sandking_epicenter_wave12.SetFrame(0.0f,
                 new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandking_epicenter_wave12.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             AnimationTrack sandking_epicenter_wave13 = new AnimationTrack("Sandsking Epicenter Wave13", 0.5f, 3.92f);
@@ -1407,7 +1407,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandking_epicenter_wave13.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             AnimationTrack sandking_epicenter_wave14 = new AnimationTrack("Sandsking Epicenter Wave14", 0.5f, 4.08f);
@@ -1415,7 +1415,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandking_epicenter_wave14.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             AnimationTrack sandking_epicenter_wave15 = new AnimationTrack("Sandsking Epicenter Wave15", 0.5f, 4.24f);
@@ -1423,7 +1423,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandking_epicenter_wave15.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             AnimationTrack sandking_epicenter_wave16 = new AnimationTrack("Sandsking Epicenter Wave16", 0.5f, 4.4f);
@@ -1431,7 +1431,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandking_epicenter_wave16.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             AnimationTrack sandking_epicenter_wave17 = new AnimationTrack("Sandsking Epicenter Wave17", 0.5f, 4.56f);
@@ -1439,7 +1439,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandking_epicenter_wave17.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             AnimationTrack sandking_epicenter_wave18 = new AnimationTrack("Sandsking Epicenter Wave18", 0.5f, 4.72f);
@@ -1447,7 +1447,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandking_epicenter_wave18.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             AnimationTrack sandking_epicenter_wave19 = new AnimationTrack("Sandsking Epicenter Wave19", 0.5f, 4.88f);
@@ -1455,7 +1455,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandking_epicenter_wave19.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             AnimationTrack sandking_epicenter_wave20 = new AnimationTrack("Sandsking Epicenter Wave20", 0.5f, 5f);
@@ -1463,7 +1463,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandking_epicenter_wave20.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             sandking_epicenter_mix.AddTrack(sandking_epicenter_wave0);
@@ -1494,10 +1494,10 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(0, 150, 255))
                 );
             slardar_slithereen_crush_track.SetFrame(0.45f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, (Effects.canvas_biggest / 2.0f) * 0.9f, Color.FromArgb(0, 150, 255))
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, (Global.deviceManager.canvas_biggest / 2.0f) * 0.9f, Color.FromArgb(0, 150, 255))
                 );
             slardar_slithereen_crush_track.SetFrame(0.5f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 0, 150, 255))
+                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Global.deviceManager.canvas_biggest / 2.0f, Color.FromArgb(0, 0, 150, 255))
                 );
 
         }
