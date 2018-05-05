@@ -71,6 +71,9 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AssettoCorsaSharedMemory">
+      <HintPath>C:\Users\zawie\Downloads\AssettoCorsaSharedMemory.dll</HintPath>
+    </Reference>
     <Reference Include="Corale.Colore, Version=5.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Colore.5.1.0\lib\net35\Corale.Colore.dll</HintPath>
       <Private>True</Private>
@@ -288,6 +291,11 @@
     <Compile Include="EffectsEngine\Animations\AnimationRectangle.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationTrack.cs" />
     <Compile Include="EffectsEngine\EffectBrush.cs" />
+    <Compile Include="Profiles\AssettoCorsa\AssettoCorsaApplication.cs" />
+    <Compile Include="Profiles\AssettoCorsa\AssettoCorsaProfile.cs" />
+    <Compile Include="Profiles\AssettoCorsa\GSI\GameState_AssettoCorsa.cs" />
+    <Compile Include="Profiles\AssettoCorsa\Layers\AssettoCorsaRpmLayerHandler.cs" />
+    <Compile Include="Profiles\AssettoCorsa\Layers\Control_AssettoCorsaRpmLayer.xaml.cs" />
     <Compile Include="Profiles\DyingLight\DyingLightProfile.cs" />
     <Compile Include="Profiles\Generic\GameEvent_Generic.cs" />
     <Compile Include="Profiles\Generic\WrapperProfile.cs" />
@@ -1060,6 +1068,10 @@
     <Page Include="Devices\SteelSeries\SteelSeriesInstallInstructions.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\AssettoCorsa\Control_AssettoCorsa.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Profiles\BF3\Control_BF3.xaml">
       <Generator>MSBuild:Compile</Generator>
